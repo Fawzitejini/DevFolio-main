@@ -1,0 +1,242 @@
+// ignore: avoid_web_libraries_in_flutter
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:folio/animations/entranceFader.dart';
+import 'package:folio/constants.dart';
+import 'package:folio/sections/about/about.dart';
+import 'package:folio/sections/contact/contact.dart';
+import 'package:folio/sections/home/home.dart';
+import 'package:folio/sections/navBar/navBarLogo.dart';
+import 'package:folio/sections/portfolio/portfolio.dart';
+import 'package:folio/sections/services/services.dart';
+import 'package:folio/sections/subscribe/subscribe_form.dart';
+import 'package:folio/widget/arrowOnTop.dart';
+import 'package:folio/widget/footer.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+
+import 'gallery/gallery_mobile.dart';
+
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  ScrollController _scrollController =
+      ScrollController(initialScrollOffset: 25.0);
+  ItemScrollController _itemScrollController = ItemScrollController();
+  ItemPositionsListener _itemPositionListener = ItemPositionsListener.create();
+
+  final List<String> _sectionsName = [
+    "Acceuil",
+    "Notre histoire",
+    "Nouveauté",
+    "Projets",
+    "Services",
+    "Contact",
+    "Abonnez-vous",
+    "Contactez nous",
+  ];
+
+  final List<IconData> _sectionsIcons = [
+    Icons.home,
+    Icons.person,
+    Icons.new_releases,
+    Icons.point_of_sale_sharp,
+    Icons.settings_applications,
+    Icons.phone,
+    Icons.subscriptions,
+    Icons.contact_page
+  ];
+
+  void _scroll(int i) {
+    _itemScrollController.scrollTo(index: i, duration: Duration(seconds: 1));
+  }
+
+  Widget sectionWidget(int i) {
+    if (i == 0) {
+      return HomePage();
+    } else if (i == 1) {
+      return About();
+    } else if (i == 2) {
+      return Services();
+    } else if (i == 3) {
+      return Portfolio();
+    } else if (i == 4) {
+      return GalleryBloc();
+    } else if (i == 5) {
+      return Contact();
+    } else if (i == 6) {
+      return Subscribe();
+    } else if (i == 7) {
+      return SizedBox(
+        height: 40.0,
+      );
+    } else if (i == 8) {
+      return ArrowOnTop(
+        onPressed: () => _scroll(0),
+      );
+    } else if (i == 9) {
+      return Footer();
+    } else {
+      return Container();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      extendBodyBehindAppBar: true,
+      appBar: MediaQuery.of(context).size.width > 760
+          ? _appBarTabDesktop()
+          : AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+            ),
+      drawer: MediaQuery.of(context).size.width < 760 ? _appBarMobile() : null,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: RawScrollbar(
+          controller: _scrollController,
+          thumbColor: kPrimaryColor,
+          thickness: 5.0,
+          child: ScrollablePositionedList.builder(
+            itemScrollController: _itemScrollController,
+            itemPositionsListener: _itemPositionListener,
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return sectionWidget(index);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _appBarActions(String childText, int index, IconData icon) {
+    return MediaQuery.of(context).size.width > 760
+        ? EntranceFader(
+            offset: Offset(0, -20),
+            delay: Duration(seconds: 3),
+            duration: Duration(seconds: 1),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MaterialButton(
+                hoverColor: kPrimaryColor,
+                onPressed: () => _scroll(index),
+                child: Text(
+                  childText,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MaterialButton(
+                hoverColor: kPrimaryColor,
+                onPressed: () => _scroll(index),
+                child: ListTile(
+                  leading: Icon(
+                    icon,
+                    color: kPrimaryColor,
+                  ),
+                  title: Text(childText),
+                )),
+          );
+  }
+
+  Widget _appBarTabDesktop() {
+    return AppBar(
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      title: MediaQuery.of(context).size.width < 740
+          ? EntranceFader(
+              duration: Duration(seconds: 1),
+              offset: Offset(0, -20),
+              delay: Duration(seconds: 3),
+              child: NavBarLogo())
+          : EntranceFader(
+              offset: Offset(0, -20),
+              duration: Duration(seconds: 1),
+              delay: Duration(seconds: 3),
+              child: NavBarLogo(
+                height: MediaQuery.of(context).size.height * 0.035,
+              ),
+            ),
+      actions: [
+        for (int i = 0; i < _sectionsName.length; i++)
+          _appBarActions(_sectionsName[i], i, _sectionsIcons[i]),
+        EntranceFader(
+          offset: Offset(0, -20),
+          delay: Duration(seconds: 3),
+          duration: Duration(seconds: 1),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: MaterialButton(
+              hoverColor: kPrimaryColor.withAlpha(150),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  side: BorderSide(color: kPrimaryColor)),
+              onPressed: () {
+                Navigator.of(context).pushNamed("ourmenu");
+              },
+              child: Text(
+                "Resume",
+                style: GoogleFonts.montserrat(
+                  fontWeight: FontWeight.w200,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _appBarMobile() {
+    return Drawer(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 25.0, 0, 0),
+        child: ListView(
+          children: [
+            Center(
+              child: NavBarLogo(
+                height: 28,
+              ),
+            ),
+            for (int i = 0; i < _sectionsName.length; i++)
+              _appBarActions(_sectionsName[i], i, _sectionsIcons[i]),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MaterialButton(
+                hoverColor: kPrimaryColor.withAlpha(150),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    side: BorderSide(color: kPrimaryColor)),
+                onPressed: () {
+                  Navigator.of(context).pushNamed("ourmenu");
+                },
+                child: ListTile(
+                  leading: Icon(
+                    Icons.book,
+                    color: Colors.red,
+                  ),
+                  title: Text(
+                    "Notre menu",
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

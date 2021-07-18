@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,8 +76,8 @@ class _PortfolioMobileTabState extends State<PortfolioMobileTab> {
                                   topRight:Radius.circular(10)
                                 ))),),
                               CircleAvatar(maxRadius: 30,
-                                child:
-                              Image.memory(DataConverter.image(S.productImage))),
+                                backgroundImage:
+                             MemoryImage(DataConverter.image(S.productImage))),
                               Text(S.productName,textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     fontSize: height * 0.02,

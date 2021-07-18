@@ -5,6 +5,7 @@ import 'package:folio/constants.dart';
 import 'package:folio/menu/bloc/bloc/items_bloc.dart';
 import 'package:folio/menu/bloc/events/items_events.dart';
 import 'package:folio/menu/bloc/states/items_states.dart';
+import 'package:folio/menu/constants/data_converter.dart';
 import 'package:folio/widget/projectCard2.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -64,6 +65,8 @@ class _PortfolioMobileTabState extends State<PortfolioMobileTab> {
                         child: Card(
                           child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
+                              CircleAvatar(child:
+                              Image.memory(DataConverter.image(S.productImage))),
                               Text(S.productName,textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
                     fontSize: height * 0.02,

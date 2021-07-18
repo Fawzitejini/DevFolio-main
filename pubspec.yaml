@@ -46,6 +46,7 @@ dependencies:
   flutter_money_formatter: ^0.8.3
   splashscreen:
   slimy_card: ^1.0.4
+  flutter_custom_clippers: ^2.0.0
 
 dev_dependencies:
   flutter_test:

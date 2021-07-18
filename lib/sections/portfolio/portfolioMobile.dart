@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:folio/constants.dart';
 import 'package:folio/menu/bloc/bloc/items_bloc.dart';
 import 'package:folio/menu/bloc/events/items_events.dart';
@@ -61,11 +62,19 @@ class _PortfolioMobileTabState extends State<PortfolioMobileTab> {
                   return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Container(
-                        width: width < 650 ? width * 0.8 : width * 0.4,
+                        width: width < 650 ? width * 0.8 : width * 0.3,
                         child: Card(
                           child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              CircleAvatar(child:
+                              SizedBox(height: 70,width: double.infinity,
+                              child: Card(
+                                color: Colors.amber,
+                                shape:BeveledRectangleBorder(borderRadius: BorderRadius.only(
+                                  topLeft:Radius.circular(10),
+                                  topRight:Radius.circular(10)
+                                ))),),
+                              CircleAvatar(maxRadius: 30,
+                                child:
                               Image.memory(DataConverter.image(S.productImage))),
                               Text(S.productName,textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
@@ -75,6 +84,7 @@ class _PortfolioMobileTabState extends State<PortfolioMobileTab> {
                   ))
                             ],
                           ),
+                          shape:BeveledRectangleBorder(borderRadius: BorderRadius.circular(15))
                         ),
                       ));
                 },

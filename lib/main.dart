@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:folio/constants.dart';
 import 'package:folio/menu/constants/own_colors.dart';
@@ -148,6 +149,39 @@ class MenuSelector extends StatelessWidget {
   }
 }
 
+
+
+class TestWebfirebase extends StatefulWidget {
+  const TestWebfirebase({ Key key }) : super(key: key);
+
+  @override
+  _TestWebfirebaseState createState() => _TestWebfirebaseState();
+}
+
+class _TestWebfirebaseState extends State<TestWebfirebase> {
+  @override
+  Widget build(BuildContext context)  {
+    return  FutureBuilder(
+      // Initialize FlutterFire:
+      future:  Firebase.initializeApp(), 
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Wrong");
+        }
+
+        // Once complete, show your application
+        if (snapshot.connectionState == ConnectionState.done) {
+          return Text("Conected");
+        }
+
+        // Otherwise, show something whilst waiting for initialization to complete
+        return Text("Auther");
+      },
+        
+      
+    );
+  }
+}
 
 
 

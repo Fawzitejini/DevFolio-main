@@ -16,7 +16,7 @@ class _SubscribeState extends State<Subscribe> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     final subscribes = TextEditingController();
-    String helper;
+    
 
     return Container(
         child: Column(children: [
@@ -44,15 +44,18 @@ class _SubscribeState extends State<Subscribe> {
         child: Column( mainAxisAlignment:MainAxisAlignment.spaceEvenly,
           children: [
             TextField(
+           
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(left:10,right: 10),
+               contentPadding: EdgeInsets.only(left:10,right: 10),
                prefixIcon: Icon(Icons.mail) ,
                 hintText: "Saisie votre email",
                 labelText: "Email",
                 helperText: SubscribeVariable.helper,
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
                 fillColor: BrandColors.xboxGrey,
-              ),
+              ),onChanged: (text){
+               
+              },
               controller: subscribes,
             ),
             SizedBox(height: 15,),
@@ -75,7 +78,7 @@ class _SubscribeState extends State<Subscribe> {
                         }
                         setState(() {});
                       },
-                      child: Text("Click me")),
+                      child: Text("Abonné")),
                 ))
           ],
         ),

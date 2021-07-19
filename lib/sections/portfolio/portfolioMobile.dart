@@ -9,6 +9,7 @@ import 'package:folio/menu/bloc/bloc/items_bloc.dart';
 import 'package:folio/menu/bloc/events/items_events.dart';
 import 'package:folio/menu/bloc/states/items_states.dart';
 import 'package:folio/menu/constants/data_converter.dart';
+import 'package:folio/menu/constants/own_colors.dart';
 import 'package:folio/widget/projectCard2.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -69,12 +70,9 @@ class _PortfolioMobileTabState extends State<PortfolioMobileTab> {
                           child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               SizedBox(height: 70,width: double.infinity,
-                              child: Card(
-                                color: Colors.amber,
-                                shape:BeveledRectangleBorder(borderRadius: BorderRadius.only(
-                                  topLeft:Radius.circular(10),
-                                  topRight:Radius.circular(10)
-                                ))),),
+                              child: Card(child:Center(child: Text("En promotion -"+ ((S.productUnitPrice-S.productSalesPrice )/S.productUnitPrice  * 100).toStringAsFixed(0)+'%')),
+                                color: BrandColors.black,
+                                shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(35))),),
                               CircleAvatar(maxRadius: 30,
                                 backgroundImage:
                              MemoryImage(DataConverter.image(S.productImage))),
@@ -112,10 +110,10 @@ class _PortfolioMobileTabState extends State<PortfolioMobileTab> {
                 borderRadius: BorderRadius.circular(5.0),
                 side: BorderSide(color: kPrimaryColor)),
             onPressed: () {
-              launchURL("https://github.com/m-hamzashakeel");
+              launchURL("");
             },
             child: Text(
-              "See More",
+              "Decouvrire",
               style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.w200,
               ),

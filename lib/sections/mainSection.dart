@@ -32,7 +32,7 @@ class _MainPageState extends State<MainPage> {
     "Acceuil",
     "Notre histoire",
     "Nouveauté",
-    "Projets",
+    "Nos promotion",
     "Services",
     "Contact",
     "Abonnez-vous",
@@ -66,9 +66,9 @@ class _MainPageState extends State<MainPage> {
     } else if (i == 4) {
       return GalleryBloc();
     } else if (i == 5) {
-      return Contact();
-    } else if (i == 6) {
       return Subscribe();
+    } else if (i == 6) {
+      return Contact();
     } else if (i == 7) {
       return SizedBox(
         height: 40.0,

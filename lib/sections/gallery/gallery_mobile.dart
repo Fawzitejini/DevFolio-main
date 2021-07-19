@@ -13,7 +13,7 @@ import '../../constants.dart';
 
 class GalleryBloc extends StatefulWidget {
   const GalleryBloc({Key key}) : super(key: key);
-  @override
+  @override 
   _GalleryState createState() => _GalleryState();
 }
 
@@ -113,10 +113,10 @@ class _MyGalleryState extends State<MyGallery> {
                     borderRadius: BorderRadius.circular(5.0),
                     side: BorderSide(color: kPrimaryColor)),
                 onPressed: () {
-                  launchURL("https://github.com/m-hamzashakeel");
+                  launchURL("");
                 },
                 child: Text(
-                  "See More",
+                  "Decouvrire",
                   style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.w200,
                   ),

@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "fouzitejini",
+    "site": "thisapp2015",
     "public": "build/web",
     "ignore": [
       "firebase.json",
@@ -9,5 +9,3 @@
     ]
   }
 }
-
-

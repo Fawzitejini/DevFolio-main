@@ -1,4 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase/firebase.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:folio/constants.dart';
 import 'package:folio/menu/constants/own_colors.dart';
@@ -8,26 +8,49 @@ import 'package:slimy_card/slimy_card.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'menu/bloc/repository/bloc_stock_reposetery.dart';
 import 'menu/ui_states/master_pages/main_page.dart';
-//import 'package:url_strategy/url_strategy.dart';
+import 'dart:async';
 
-void main() {
+//import 'package:url_strategy/url_strategy.dart';
+class Testfirebase {
+  static Future<void> fire() async {
+    try {
+      if (app.apps.isEmpty) {
+        app.initializeApp(
+            apiKey: "AIzaSyDHtURV4WTAuYl3X63u862WhboqlPsLze0",
+            authDomain: "fouzi-87672.firebaseapp.com",
+            databaseURL: "https://fouzi-87672.firebaseio.com",
+            projectId: "fouzi-87672",
+            storageBucket: "fouzi-87672.appspot.com",
+            messagingSenderId: "960199945853",
+            appId: "1:960199945853:web:91598c0f6cfbafb9ce8b14");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Testfirebase.fire();
   runApp(MyApp());
 }
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      routes: {"portail":(context)=>Splash()
-      ,         "menu":(context)=>MenuSplash(),
-                 "ourmenu":(context)=>BlocMainPage()
-      },
-      initialRoute: "http://localhost:14556/",
+        routes: {
+          "portail": (context) => Splash(),
+          "menu": (context) => MenuSplash(),
+          "ourmenu": (context) => BlocMainPage()
+        },
         debugShowCheckedModeBanner: false,
         title: 'ESSALAM',
         theme: ThemeData(
           brightness: Brightness.dark,
           primaryColorDark: BrandColors.black,
-         // primaryColor: kPrimaryColor,
+          // primaryColor: kPrimaryColor,
           fontFamily: GoogleFonts.ubuntu().fontFamily,
           //fontFamily: "Montserrat",
           highlightColor: kPrimaryColor,
@@ -67,7 +90,6 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return SplashScreen(
       loaderColor: kPrimaryColor,
-      
       navigateAfterFuture: loadfromFuture(),
       title: const Text('Bienvenu au platform essalam'),
       image: Image.network(
@@ -101,9 +123,8 @@ class MenuSelector extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text("Portail"),
-                      Text(
-                          "Découvrez nous avec notre portail"),
-                    ], 
+                      Text("Découvrez nous avec notre portail"),
+                    ],
                   ),
                   bottomCardWidget: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -125,10 +146,7 @@ class MenuSelector extends StatelessWidget {
                   borderRadius: 15,
                   topCardWidget: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text("Menu"),
-                      Text("notre menu du jour")
-                    ],
+                    children: [Text("Menu"), Text("notre menu du jour")],
                   ),
                   bottomCardWidget: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -149,58 +167,6 @@ class MenuSelector extends StatelessWidget {
   }
 }
 
-
-
-class TestWebfirebase extends StatefulWidget {
-  const TestWebfirebase({ Key key }) : super(key: key);
-
-  @override
-  _TestWebfirebaseState createState() => _TestWebfirebaseState();
-}
-
-class _TestWebfirebaseState extends State<TestWebfirebase> {
-  @override
-  Widget build(BuildContext context)  {
-    return  FutureBuilder(
-      // Initialize FlutterFire:
-      future:  Firebase.initializeApp(), 
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Wrong");
-        }
-
-        // Once complete, show your application
-        if (snapshot.connectionState == ConnectionState.done) {
-          return Text("Conected");
-        }
-
-        // Otherwise, show something whilst waiting for initialization to complete
-        return Text("Auther");
-      },
-        
-      
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class MenuSplash extends StatefulWidget {
   const MenuSplash({Key key}) : super(key: key);
 
@@ -211,6 +177,7 @@ class MenuSplash extends StatefulWidget {
 class _MenuSplashState extends State<MenuSplash> {
   Future<Widget> loadfromFuture() async {
     BlocStockReposetery.fullStock = await BlocStockReposetery.getStockData();
+    // await Freposetory.builds();
     return Future.value(BlocMainPage());
   }
 
@@ -221,9 +188,16 @@ class _MenuSplashState extends State<MenuSplash> {
       navigateAfterFuture: loadfromFuture(),
       title: const Text('Bienvenu au platform essalam'),
       image: Image.network(
-          "https://img.20mn.fr/4h6nRiywT-K3L4xrdTrjjA/648x360_simulation-informatique-disque-accretion-autour-horizon-trou-noir.jpg"),
+        "https://img.20mn.fr/4h6nRiywT-K3L4xrdTrjjA/648x360_simulation-informatique-disque-accretion-autour-horizon-trou-noir.jpg",
+        height: 120,
+        width: 120,
+      ),
       backgroundColor: BrandColors.black,
       styleTextUnderTheLoader: const TextStyle(),
     );
   }
 }
+
+
+
+

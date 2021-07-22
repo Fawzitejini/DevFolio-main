@@ -27,34 +27,37 @@
 
   <title>ESSALAM</title>
   <link rel="manifest" href="manifest.json">
-</head>
-<body>
+    <!-- // Other stuff -->
+ <!--  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-database.js"></script>-->
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+<script src="https://api.daytonsquareroots.org/firebasedatabaseweb/v0.0.2/app.js" defer></script>
  
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="/__/firebase/8.7.1/firebase-app.js"></script>
-<script>
-  const firebaseConfig = {
+    <script src="https://maps.googleapis.com/maps/api/js?key=e687196c4d1db2bda1466f248e4fe6ddff4f43c6"></script>
+    <script>
+      const firebaseConfig = {
   apiKey: "AIzaSyDHtURV4WTAuYl3X63u862WhboqlPsLze0",
   authDomain: "fouzi-87672.firebaseapp.com",
   databaseURL: "https://fouzi-87672.firebaseio.com",
   projectId: "fouzi-87672",
   storageBucket: "fouzi-87672.appspot.com",
   messagingSenderId: "960199945853",
-  appId: "1:960199945853:web:77ea23574615d18bce8b14"
+  appId: "1:960199945853:web:91598c0f6cfbafb9ce8b14"
 };
-</script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
-
-<!-- Initialize Firebase -->
-<script src="/__/firebase/init.js"></script>
-
-
+firebase.initializeApp(firebaseConfig); 
+    </script>
   
-  <!-- This script installs service_worker.js to provide PWA functionality to
-       application. For more information, see:
-       https://developers.google.com/web/fundamentals/primers/service-workers -->
+</head>
+<body>
+  
+
+
+
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function () {
@@ -63,5 +66,7 @@
     }
   </script>
   <script src="main.dart.js" type="application/javascript"></script>
+ 
+   
 </body>
 </html>

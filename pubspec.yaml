@@ -36,18 +36,21 @@ dependencies:
   universal_html: ^2.0.4
   gallery_view: ^0.0.4
   email_validator: '^1.0.6'
-  intl:
   http:
+  intl: ^0.17.0
   flutter_bloc: ^7.0.1
   equatable: ^2.0.3
   firebase_core: ^1.0.3
-  firebase_database: ^6.1.2
+  firebase_db_web_unofficial: ^0.0.2
+  firebase_auth_web:
+  firebase_database: ^7.1.2 
   animations: ^2.0.1
-  flutter_money_formatter: ^0.8.3
+  firebase:
+  google_maps: ^3.4.1
   splashscreen:
   slimy_card: ^1.0.4
+  moor: ^4.4.1
   flutter_custom_clippers: ^2.0.0
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

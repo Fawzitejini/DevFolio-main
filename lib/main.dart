@@ -1,6 +1,7 @@
 import 'package:firebase/firebase.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:folio/constants.dart';
+import 'package:folio/menu/bloc/repository/firebase_reposetory.dart';
 import 'package:folio/menu/constants/own_colors.dart';
 import 'package:folio/sections/mainSection.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,6 +28,8 @@ class Testfirebase {
     } catch (e) {
       print(e);
     }
+    await Freposetery.getData();
+    
   }
 }
 
@@ -197,7 +200,3 @@ class _MenuSplashState extends State<MenuSplash> {
     );
   }
 }
-
-
-
-

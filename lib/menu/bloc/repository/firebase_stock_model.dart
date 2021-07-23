@@ -31,20 +31,6 @@ class FStock {
   dynamic productSalesPrice;
   dynamic productUnitPrice;
   List<FAvis> avis;
-  FStock.fromdb(DatabaseSnapshot data) {
-    datePublier = data.value["DatePublier"] == null
-        ? DateTime.now().subtract(const Duration(days: 11))
-        : DateTime.parse(data.value["DatePublier"]);
-    isSales = data.value["IsSales"];
-    productDiscreption = data.value["ProductDiscreption"];
-    productId = data.value["ProductId"];
-    productImage = data.value["ProductImage"];
-    productLike = data.value["ProductLike"];
-    productName = data.value["ProductName"];
-    productQte = data.value["ProductQte"];
-    productSalesPrice = data.value["ProductSalesPrice"];
-    productUnitPrice = data.value["ProductUnitPrice"];
-  }
 }
 
 class FCategories {
@@ -80,7 +66,7 @@ class FUsers {
 }
 
 class DataSource {
- static Future<FirebaseApp> snap() async {
+  static Future<FirebaseApp> snap() async {
     final _initialization = await Firebase.initializeApp();
     return _initialization;
   }

@@ -41,7 +41,6 @@ dependencies:
   flutter_bloc: ^7.0.1
   equatable: ^2.0.3
   firebase_core: ^1.0.3
-  firebase_db_web_unofficial: ^0.0.2
   firebase_auth_web:
   firebase_database: ^7.1.2 
   animations: ^2.0.1
@@ -50,6 +49,8 @@ dependencies:
   splashscreen:
   slimy_card: ^1.0.4
   moor: ^4.4.1
+  firebase_db_web_unofficial: ^0.0.2
+
   flutter_custom_clippers: ^2.0.0
 dev_dependencies:
   flutter_test:

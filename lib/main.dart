@@ -8,12 +8,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:slimy_card/slimy_card.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'menu/bloc/repository/bloc_stock_reposetery.dart';
+import 'menu/bloc/repository/firebase_stock_model.dart';
 import 'menu/ui_states/master_pages/main_page.dart';
 import 'dart:async';
 
+import 'sections/additem/additem_mobile.dart';
+
 //import 'package:url_strategy/url_strategy.dart';
 class Testfirebase {
-  static Future<void> fire() async {
+  /**  static Future<void> fire() async {
     try {
       if (app.apps.isEmpty) {
         app.initializeApp(
@@ -30,12 +33,13 @@ class Testfirebase {
     }
     await Freposetery.getData();
     
-  }
+  }*/
+
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Testfirebase.fire();
+
   runApp(MyApp());
 }
 
@@ -44,6 +48,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         routes: {
+          "newitem": (_) => AddItem(),
           "portail": (context) => Splash(),
           "menu": (context) => MenuSplash(),
           "ourmenu": (context) => BlocMainPage()
@@ -85,7 +90,8 @@ class Splash extends StatefulWidget {
 
 class _SplashState extends State<Splash> {
   Future<Widget> loadfromFuture() async {
-    BlocStockReposetery.fullStock = await BlocStockReposetery.getStockData();
+    // BlocStockReposetery.fullStock = await BlocStockReposetery.getStockData();
+    await InitialzeApp.initializeApp();
     return Future.value(MainPage());
   }
 
@@ -157,7 +163,8 @@ class MenuSelector extends StatelessWidget {
                             borderRadius: BorderRadius.circular(25)),
                         primary: BrandColors.black),
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed("menu");
+                      // Navigator.of(context).pushReplacementNamed("menu");
+                      Navigator.of(context).pushNamed("newitem");
                     },
                     child: Text("Contunier"),
                   ),

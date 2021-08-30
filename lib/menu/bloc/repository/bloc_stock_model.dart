@@ -1,8 +1,11 @@
-
 import 'dart:convert';
 
-Map<String, BlocStockModel> stocksFromJson(String str) => Map.from(json.decode(str))
-    .map((k, v) => MapEntry<String, BlocStockModel>(k, BlocStockModel.fromJson(v)));
+import 'package:firebase_database/firebase_database.dart';
+import 'package:google_maps/google_maps.dart';
+
+Map<String, BlocStockModel> stocksFromJson(String str) =>
+    Map.from(json.decode(str)).map((k, v) =>
+        MapEntry<String, BlocStockModel>(k, BlocStockModel.fromJson(v)));
 
 String stocksToJson(Map<String, BlocStockModel> data) => json.encode(
     Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v.toJson())));
@@ -10,39 +13,38 @@ String stocksToJson(Map<String, BlocStockModel> data) => json.encode(
 class BlocStockModel {
   BlocStockModel({
     this.datePublier,
-
-     this.isSales,
-     this.productCategories,
-     this.productDiscreption,
-     this.productId,
-     this.productImage,
-     this.productLike,
-     this.productName,
-     this.productQte,
-     this.productSalesPrice,
-     this.productUnitPrice,
-     this.rate ,
-     this.avis,
+    this.isSales,
+    this.productCategories,
+    this.productDiscreption,
+    this.productId,
+    this.productImage,
+    this.productLike,
+    this.productName,
+    this.productQte,
+    this.productSalesPrice,
+    this.productUnitPrice,
+    this.rate,
+    this.avis,
   });
-  DateTime  datePublier;
-   bool isSales;
+  DateTime datePublier;
+  bool isSales;
   ProductCategories productCategories;
   String productDiscreption;
   int productId;
   String productImage;
-  int  productLike;
+  int productLike;
   String productName;
-  int  productQte;
-  double  rate ;
+  int productQte;
+  double rate;
   dynamic productSalesPrice;
   dynamic productUnitPrice;
-  Map<String, Avi>  avis;
+  Map<String, Avi> avis;
 
   factory BlocStockModel.fromJson(Map<String, dynamic> json) => BlocStockModel(
         datePublier: json["DatePublier"] == null
-            ? DateTime.now().subtract(const Duration(days:11))
+            ? DateTime.now().subtract(const Duration(days: 11))
             : DateTime.parse(json["DatePublier"]),
-        isSales:  json["IsSales"],
+        isSales: json["IsSales"],
         productCategories:
             ProductCategories.fromJson(json["ProductCategories"]),
         productDiscreption: json["ProductDiscreption"],
@@ -79,26 +81,31 @@ class BlocStockModel {
                 .map((k, v) => MapEntry<String, dynamic>(k, v.toJson())),
       };
 }
+
 class Avi {
   Avi({
-     this.comment,
-     this.isLike,
+    this.comment,
+    this.isLike,
     this.rate,
   });
 
   String comment;
   bool isLike;
   dynamic rate;
-
+   factory Avi.fromJson(Map<String, dynamic> json) => Avi(
+        comment: json["userId"],
+        isLike: json["id"],
+        rate: json["title"],  
+    );
 /*  Avi.fromSnapshot(DataSnapshot snapshot)
       : comment = snapshot.value["Comment"],
         isLike = snapshot.value["IsLike"],
         rate = snapshot.value["Rate"]; */
 
-  factory Avi.fromJson(Map<String, dynamic> json) => Avi(
-        comment: json["Comment"],
-        isLike: json["IsLike"],
-        rate: json["Rate"],
+  factory Avi.fromdb(DataSnapshot json) => Avi(
+        comment: json.value["Comment"],
+        isLike: json.value["IsLike"],
+        rate: json.value["Rate"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -106,22 +113,26 @@ class Avi {
         "IsLike": isLike,
         "Rate": rate,
       };
+
+  static Map avisToDatabase(Avi avi) {
+    return {
+      "Comment": avi.comment,
+      "IsLike": avi.isLike,
+      "Rate": avi.rate,
+    };
+  }
 }
 
 class ProductCategories {
   ProductCategories({
-     this.categoriesId,
-     this.categoriesImage,
-     this.categoriesName,
+    this.categoriesId,
+    this.categoriesImage,
+    this.categoriesName,
   });
 
   String categoriesId;
   String categoriesImage;
   String categoriesName;
-/*  ProductCategories.fromSnapshot(DataSnapshot snapshot)
-      : categoriesId = snapshot.value["CategoriesID"],
-        categoriesImage = snapshot.value["CategoriesImage"],
-        categoriesName = snapshot.value["CategoriesName"];*/
 
   factory ProductCategories.fromJson(Map<String, dynamic> json) =>
       ProductCategories(
@@ -135,4 +146,109 @@ class ProductCategories {
         "CategoriesImage": categoriesImage,
         "CategoriesName": categoriesName,
       };
+
+  static Map productCategoriesFromData(ProductCategories categories) {
+    return {
+      "CategoriesID": categories.categoriesId,
+      "CategoriesImage": categories.categoriesImage,
+      "CategoriesName": categories.categoriesName
+    };
+  }
+}
+
+class StockModel {
+  StockModel({
+    this.datePublier,
+    this.isSales,
+    this.productCategories,
+    this.productDiscreption,
+    this.productId,
+    this.productImage,
+    this.productLike,
+    this.productName,
+    this.productQte,
+    this.productSalesPrice,
+    this.productUnitPrice,
+    this.rate,
+    this.avis,
+  });
+  DateTime datePublier;
+  bool isSales;
+  ProductCategories productCategories;
+  String productDiscreption;
+  int productId;
+  String productImage;
+  int productLike;
+  String productName;
+  int productQte;
+  double rate;
+  dynamic productSalesPrice;
+  dynamic productUnitPrice;
+  List<Avis> avis;
+
+  static Future<void> stockInitialize() async {
+    List<StockModel> items = [];
+    Map<dynamic, dynamic> database = {};
+    FirebaseDatabase.instance.reference().child("").once().then((value) {
+      if (value.value != null) {
+        database = value.value;
+      }
+    });
+
+    if (database.isNotEmpty) {
+      for (var item in database.values) {
+        StockModel stockModel = StockModel(
+          datePublier: item[''],
+          isSales: item[''],
+          productCategories: item[''],
+          productDiscreption: item[''],
+          productId: item[""],
+          productImage: item[''],
+         productSalesPrice: item[''],
+         productName: item[''],
+         productLike:item[''],
+         productUnitPrice: item[''],
+         productQte: item[''],
+         avis: aviFromJson(item['']),
+        
+
+        );
+
+        items.add(stockModel);
+      }
+      return items;
+    }
+  }
+}
+
+
+
+List<Avis> aviFromJson(String str) => List<Avis>.from(json.decode(str).map((x) => Avis.fromJson(x)));
+
+class Avis {
+  static Map avisToDatabase(Avi avi) {
+    return {
+      "Comment": avi.comment,
+      "IsLike": avi.isLike,
+      "Rate": avi.rate,
+    };
+  }
+  Avis({
+    this.comment,
+    this.isLike,
+    this.rate,
+  });
+
+  String comment;
+  bool isLike;
+  dynamic rate;
+
+    factory Avis.fromJson(Map<String, dynamic> json) => Avis(
+        comment: json["userId"],
+        isLike: json["id"],
+        rate: json["title"],
+      
+    );
+
+   
 }

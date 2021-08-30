@@ -2,7 +2,8 @@
 
 import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
 
-import '../../../public_data.dart';
+import '../../../../public_data.dart';
+
 
 class FReposetery {
 

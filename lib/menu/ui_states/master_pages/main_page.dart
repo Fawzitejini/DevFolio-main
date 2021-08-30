@@ -24,7 +24,7 @@ class _MainPageState extends State<BlocMainPage> {
     return BlocProvider(
         create: (context) => ItemsBloc(
               ItemsInitState(),
-             Freposetery(),
+             FReposetery(),
             ),
         child: const Scaffold(body: HomePage()));
   }

@@ -3,11 +3,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:folio/menu/bloc/bloc/items_bloc.dart';
+import 'package:folio/menu/bloc/bloc/repository/firebase_reposetory.dart';
 import 'package:folio/menu/bloc/events/items_events.dart';
+import 'package:folio/menu/bloc/repository/firebase_reposetory.dart';
 import 'package:folio/nou_used/bloc_stock_reposetery.dart';
 import 'package:folio/menu/bloc/states/items_states.dart';
 import 'package:folio/widget/projectCard.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 
 import '../../constants.dart';
 
@@ -22,7 +25,7 @@ class _GalleryState extends State<GalleryBloc> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
-          ItemsBloc(ItemsInitState(), NoneAsyncBlocStockReposetery()),
+          ItemsBloc(ItemsInitState(), FReposetery()),
       child: MyGallery(),
     );
   }

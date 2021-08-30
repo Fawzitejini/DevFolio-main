@@ -4,8 +4,9 @@ import 'package:folio/menu/bloc/events/items_events.dart';
 import 'package:folio/menu/bloc/repository/firebase_reposetory.dart';
 import 'package:folio/menu/bloc/states/items_states.dart';
 class ItemsBloc extends Bloc<ItemsEvents, ItemsStates> {
-  Freposetery freposetery;
-  ItemsBloc(ItemsStates initialState, this.freposetery)
+  FReposetery freposetery;
+  ItemsBloc(ItemsStates initialState,
+   this.freposetery)
       : super(initialState);
   @override
   Stream<ItemsStates> mapEventToState(ItemsEvents event) async* {

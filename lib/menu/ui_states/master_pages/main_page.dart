@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:folio/menu/bloc/bloc/items_bloc.dart';
 import 'package:folio/menu/bloc/events/items_events.dart';
-import 'package:folio/menu/bloc/repository/bloc_stock_reposetery.dart';
+import 'package:folio/nou_used/bloc_stock_reposetery.dart';
+import 'package:folio/menu/bloc/repository/firebase_reposetory.dart';
 import 'package:folio/menu/bloc/states/items_states.dart';
 import 'package:folio/menu/constants/data_converter.dart';
 import 'package:folio/menu/constants/own_colors.dart';
@@ -23,7 +24,7 @@ class _MainPageState extends State<BlocMainPage> {
     return BlocProvider(
         create: (context) => ItemsBloc(
               ItemsInitState(),
-              NoneAsyncBlocStockReposetery(),
+             Freposetery(),
             ),
         child: const Scaffold(body: HomePage()));
   }

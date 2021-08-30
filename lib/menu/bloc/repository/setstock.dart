@@ -4,10 +4,10 @@ import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
 import '../../../public_data.dart';
 
 class SetData {
-  Map stockToMap(FStock stock, FCategories categories) {
+  static Map stockToMap(FStock stock, FCategories categories) {
     return {
-      "datepublier": stock.datePublier,
-      "productId": randomNumber(100, 99999999),
+      "datepublier": DateTime.now().toString(),
+      "productId": randomNumber(100, 9999).toString(),
       "name": stock.productName,
       "categorie": FCategories.productCategoriesTomMap(categories),
       "photo": stock.productImage,
@@ -18,11 +18,12 @@ class SetData {
     };
   }
 
-  void setNewitems(FStock stock, FCategories categories) {
-    FirebaseDatabaseWeb.instance
+ static Future<void> setNewitems(FStock stock, FCategories categories) async {
+   FirebaseDatabaseWeb.instance
         .reference()
-        .child("items")
+        .child("items").child(getRandString(10))
         .set(stockToMap(stock, categories));
+    print("object saved");
   }
 }
 
@@ -52,3 +53,6 @@ class SetData {
 
 
          */
+
+
+

@@ -1,11 +1,11 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:folio/menu/bloc/events/items_events.dart';
-import 'package:folio/menu/bloc/repository/bloc_stock_reposetery.dart';
+import 'package:folio/menu/bloc/repository/firebase_reposetory.dart';
 import 'package:folio/menu/bloc/states/items_states.dart';
 class ItemsBloc extends Bloc<ItemsEvents, ItemsStates> {
-  NoneAsyncBlocStockReposetery noneAsyncBlocStockReposetery;
-  ItemsBloc(ItemsStates initialState, this.noneAsyncBlocStockReposetery)
+  Freposetery freposetery;
+  ItemsBloc(ItemsStates initialState, this.freposetery)
       : super(initialState);
   @override
   Stream<ItemsStates> mapEventToState(ItemsEvents event) async* {
@@ -13,10 +13,10 @@ class ItemsBloc extends Bloc<ItemsEvents, ItemsStates> {
       yield ItemsLoadingState();
       try {
         yield ItemsLoadedState(
-            catalogue: noneAsyncBlocStockReposetery.getStockData(),
-            categorie: noneAsyncBlocStockReposetery.getCategorie(),
-            newItems:  noneAsyncBlocStockReposetery.getNewitems(),
-            slaesItems: noneAsyncBlocStockReposetery.getSalesitems()
+            catalogue: freposetery.publicStock(),
+            categorie: freposetery.getCategorie(),
+            newItems:  freposetery.getNewitems(),
+            slaesItems: freposetery.getSalesitems()
             );
       } catch (e) {
         yield ItemsFailedLoadState(errorMessage: e.toString());

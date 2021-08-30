@@ -7,7 +7,7 @@ import 'package:folio/sections/mainSection.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slimy_card/slimy_card.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'menu/bloc/repository/bloc_stock_reposetery.dart';
+import 'nou_used/bloc_stock_reposetery.dart';
 import 'menu/bloc/repository/firebase_stock_model.dart';
 import 'menu/ui_states/master_pages/main_page.dart';
 import 'dart:async';

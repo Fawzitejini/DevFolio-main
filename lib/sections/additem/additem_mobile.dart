@@ -1,6 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
+import 'package:folio/menu/bloc/repository/setstock.dart';
+import 'package:folio/menu/constants/data_converter.dart';
+
+import '../../public_data.dart';
 
 bool isExistCategory = false;
 String image;
@@ -25,6 +30,7 @@ class AddItem extends StatefulWidget {
 class _AddItemState extends State<AddItem> {
   @override
   Widget build(BuildContext context) {
+    FStock _stock = FStock();
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(10),
@@ -41,7 +47,8 @@ class _AddItemState extends State<AddItem> {
                       child: CircleAvatar(
                         radius: 50,
                         child: Center(
-                            child: Image.asset("assets/dsc.png", width: 95)),
+                            child: Image.memory(DataConverter.image(image),
+                                width: 95)),
                       ),
                     ),
               Expanded(
@@ -53,7 +60,12 @@ class _AddItemState extends State<AddItem> {
                               primary: Colors.grey,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8))),
-                          onPressed: null,
+                          onPressed: () async {
+                            image = await uploadImage();
+                            setState(() {
+                              print(image);
+                            });
+                          },
                           child: Text("upload image")))),
               Expanded(flex: 2, child: Container())
             ],
@@ -69,23 +81,35 @@ class _AddItemState extends State<AddItem> {
           SizedBox(
             height: 20,
           ),
-          PriceSection(), SizedBox(
+          PriceSection(),
+          SizedBox(
             height: 20,
-          ),Container(
-              height: 40,width:double.infinity,
+          ),
+          Container(
+              height: 40,
+              width: double.infinity,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       primary: Colors.grey,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8))),
-                  onPressed:()
-                  {
+                  onPressed: () async {
+                    _stock.productName = designation.text;
 
-                  } ,
+                    _stock.isSales = isSale;
+                    _stock.productDiscreption = description.text;
+                    _stock.productImage = image == null ? null : image;
+                    _stock.productUnitPrice = double.parse(unitPrice.text);
+                    _stock.productSalesPrice = double.parse(salesPrice.text);
+                    await SetData.setNewitems(
+                        _stock,
+                        FCategories(
+                            categoriesId: "Test",
+                            categoriesName: "Test",
+                            categoriesImage: "Nan"));
+                  },
                   child: Text("Sauvgardez"))),
-            
         ],
-        
       ),
     ));
   }
@@ -104,7 +128,7 @@ class _CheckWidgetState extends State<CheckWidget> {
     return Row(
       children: [
         SizedBox(
-          width:150,
+          width: 150,
           child: CheckboxListTile(
             value: isExistCategory,
             onChanged: (e) {
@@ -152,7 +176,7 @@ class _CheckWidgetState extends State<CheckWidget> {
               ))
             : Expanded(
                 child: TextField(
-                  controller: categorie,
+                controller: categorie,
                 decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.amber),
@@ -256,7 +280,8 @@ class _PriceSectionState extends State<PriceSection> {
                 ? Expanded(
                     child: Column(
                     children: [
-                      TextField( controller:unitPrice,
+                      TextField(
+                        controller: unitPrice,
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.amber),
@@ -271,7 +296,8 @@ class _PriceSectionState extends State<PriceSection> {
                                 borderRadius: BorderRadius.circular(5))),
                       ),
                       SizedBox(height: 20),
-                      TextField(controller: salesPrice,
+                      TextField(
+                        controller: salesPrice,
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.amber),
@@ -289,7 +315,7 @@ class _PriceSectionState extends State<PriceSection> {
                   ))
                 : Expanded(
                     child: TextField(
-                      controller: unitPrice,
+                    controller: unitPrice,
                     decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.amber),

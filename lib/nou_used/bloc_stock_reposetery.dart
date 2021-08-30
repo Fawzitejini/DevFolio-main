@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+
 import 'bloc_stock_model.dart';
 
 class BlocStockReposetery {

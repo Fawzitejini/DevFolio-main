@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:firebase/firebase.dart' as app;
 import 'package:firebase_db_web_unofficial/firebasedbwebunofficial.dart';
-
-import '../../../public_data.dart';
+import 'package:folio/public_data.dart';
 
 class FStock {
   FStock({
@@ -13,24 +12,22 @@ class FStock {
     this.productId,
     this.productImage,
     this.productName,
-    this.productQte,
     this.productSalesPrice,
     this.productUnitPrice,
     this.avis,
+    this.rate,
   });
   DateTime datePublier;
   bool isSales;
   FCategories productCategories;
   String productDiscreption;
-  int productId;
+  String productId;
   String productImage;
-  int productLike;
   String productName;
-  int productQte;
-  double rate;
   dynamic productSalesPrice;
   dynamic productUnitPrice;
   List<FAvis> avis;
+  double rate;
 }
 
 class FCategories {
@@ -69,7 +66,7 @@ class FAvis {
     };
   }
 
-  int id;
+  String id;
   String comment;
   double rate;
   FUsers user;
@@ -83,7 +80,7 @@ class FAvis {
 }
 
 class FUsers {
-  int id;
+  String id;
   String name;
   String email;
   String address;
@@ -118,8 +115,13 @@ class InitialzeApp {
       print("error initialize: {$e}");
       return;
     }
-    await getItems().then((value) => essalamMenu = value);
-    print("Out error with " + essalamMenu.length.toString());
+
+    try {
+      await getItems().then((value) => globalListOfStock = value);
+      print("Out error with lenght : " + globalListOfStock.length.toString());
+    } catch (e) {
+      print("With error:  " + e.toString());
+    }
   }
 }
 
@@ -147,16 +149,16 @@ Future<List<FStock>> getItems() async {
         datePublier: item["datepublier"] == null
             ? DateTime.now().subtract(const Duration(days: 11))
             : DateTime.parse(item["datepublier"]),
-        productId: randomNumber(100, 99999999),
+        productId: item['productId'].toString(),
         productName: item['name'],
-        productQte: item['qte'],
         productCategories: FCategories.fromJson(item['categorie']),
-        productImage: item['photo'],
+        productImage: item['photo'] == null ? "" : item['photo'],
         productDiscreption: item['description'],
         productUnitPrice: item['price'],
-        productSalesPrice: item['saleprice'],
-        avis: aviFromJson(item['avis']),
-        isSales: item['issales']);
+        productSalesPrice: item["saleprice"],
+        isSales: item['issales'] == "true" ? true : false,
+        avis: item['avis'] == null ? [] : aviFromJson(item['avis']));
     _stock.add(_fstock);
   }
+  return _stock;
 }

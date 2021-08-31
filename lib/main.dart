@@ -12,6 +12,8 @@ import 'menu/bloc/repository/firebase_stock_model.dart';
 import 'menu/ui_states/master_pages/main_page.dart';
 import 'dart:async';
 
+import 'sections/additem/addcategorie.dart';
+import 'sections/additem/additem.dart';
 import 'sections/additem/additem_mobile.dart';
 
 //import 'package:url_strategy/url_strategy.dart';
@@ -48,7 +50,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         routes: {
-          "newitem": (_) => AddItem(),
+          "newcategorie": (_) => AddCategorie(),
+          "newitem": (_) => RootAddItem(),
           "portail": (context) => Splash(),
           "menu": (context) => MenuSplash(),
           "ourmenu": (context) => BlocMainPage()
@@ -163,8 +166,8 @@ class MenuSelector extends StatelessWidget {
                             borderRadius: BorderRadius.circular(25)),
                         primary: BrandColors.black),
                     onPressed: () {
-                      // Navigator.of(context).pushReplacementNamed("menu");
-                      Navigator.of(context).pushNamed("newitem");
+                      Navigator.of(context).pushReplacementNamed("menu");
+                      
                     },
                     child: Text("Contunier"),
                   ),
@@ -186,7 +189,7 @@ class MenuSplash extends StatefulWidget {
 
 class _MenuSplashState extends State<MenuSplash> {
   Future<Widget> loadfromFuture() async {
-    BlocStockReposetery.fullStock = await BlocStockReposetery.getStockData();
+     await InitialzeApp.initializeApp();
     // await Freposetory.builds();
     return Future.value(BlocMainPage());
   }

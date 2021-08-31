@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
 import 'package:folio/menu/bloc/repository/setstock.dart';
 import 'package:folio/menu/constants/data_converter.dart';
+import 'package:folio/menu/constants/own_colors.dart';
 
 import '../../public_data.dart';
+
 
 bool isExistCategory = false;
 String image;
@@ -32,86 +34,123 @@ class _AddItemState extends State<AddItem> {
   Widget build(BuildContext context) {
     FStock _stock = FStock();
     return Scaffold(
+        backgroundColor: BrandColors.xboxGrey,
         body: Padding(
-      padding: const EdgeInsets.all(10),
-      child: ListView(
-        children: [
-          SizedBox(height: 20),
-          Text("Nouveau element"),
-          SizedBox(height: 20),
-          Row(
+          padding: const EdgeInsets.all(10),
+          child: ListView(
             children: [
-              image == null
-                  ? Container()
-                  : Expanded(
-                      child: CircleAvatar(
-                        radius: 50,
-                        child: Center(
-                            child: Image.memory(DataConverter.image(image),
-                                width: 95)),
-                      ),
-                    ),
-              Expanded(
-                  flex: 1,
-                  child: Container(
-                      height: 40,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.grey,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8))),
-                          onPressed: () async {
-                            image = await uploadImage();
-                            setState(() {
-                              print(image);
-                            });
-                          },
-                          child: Text("upload image")))),
-              Expanded(flex: 2, child: Container())
+              SizedBox(height: 20),
+              Text("Nouveau element"),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  image == null
+                      ? Container()
+                      : Expanded(
+                          child: Image.memory(
+                            DataConverter.image(image),
+                            width: 180,
+                            height: 180,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                          height: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.grey,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
+                                onPressed: () async {
+                                  image = await uploadImage();
+                                  setState(() {});
+                                },
+                                child: Text("upload image")),
+                          ))),
+                ],
+              ),
+              SizedBox(height: 20),
+              CheckWidget(),
+              SizedBox(
+                height: 20,
+              ),
+              Designation(),
+              SizedBox(height: 20),
+              Description(),
+              SizedBox(
+                height: 20,
+              ),
+              PriceSection(),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                  height: 40,
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          primary: Colors.grey,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8))),
+                      onPressed: () async {
+                        try {
+                          _stock.productName = designation.text;
+
+                          _stock.isSales = isSale;
+                          _stock.productDiscreption = description.text;
+                          _stock.productImage = image == null ? null : image;
+                          _stock.productUnitPrice =
+                              double.parse(unitPrice.text);
+                          _stock.productSalesPrice =
+                              double.parse(salesPrice.text);
+                          await SetData.setNewitems(
+                              _stock,
+                              FCategories(
+                                  categoriesId: "Test",
+                                  categoriesName: "Test",
+                                  categoriesImage: "Nan"));
+                          Navigator.of(context).pop();
+                        } catch (e) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: BrandColors.xboxGrey,
+                                  scrollable: true,
+                                  title: Text('Login',
+                                      style: TextStyle(color: Colors.amber)),
+                                  content: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Form(
+                                      child: Text(
+                                        "Erreur: {$e}",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    // ignore: deprecated_member_use
+                                    IconButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      icon: Icon(Icons.close,
+                                          color: Colors.white),
+                                    )
+                                  ],
+                                );
+                              });
+                        }
+                      },
+                      child: Text("Sauvgardez"))),
             ],
           ),
-          SizedBox(height: 20),
-          CheckWidget(),
-          SizedBox(
-            height: 20,
-          ),
-          Designation(),
-          SizedBox(height: 20),
-          Description(),
-          SizedBox(
-            height: 20,
-          ),
-          PriceSection(),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-              height: 40,
-              width: double.infinity,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      primary: Colors.grey,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8))),
-                  onPressed: () async {
-                    _stock.productName = designation.text;
-
-                    _stock.isSales = isSale;
-                    _stock.productDiscreption = description.text;
-                    _stock.productImage = image == null ? null : image;
-                    _stock.productUnitPrice = double.parse(unitPrice.text);
-                    _stock.productSalesPrice = double.parse(salesPrice.text);
-                    await SetData.setNewitems(
-                        _stock,
-                        FCategories(
-                            categoriesId: "Test",
-                            categoriesName: "Test",
-                            categoriesImage: "Nan"));
-                  },
-                  child: Text("Sauvgardez"))),
-        ],
-      ),
-    ));
+        ));
   }
 }
 
@@ -129,66 +168,48 @@ class _CheckWidgetState extends State<CheckWidget> {
       children: [
         SizedBox(
           width: 150,
-          child: CheckboxListTile(
-            value: isExistCategory,
-            onChanged: (e) {
-              setState(() {
-                isExistCategory = e;
-              });
-            },
-            title: Text(
-              isExistCategory == true
-                  ? unCheckedLabelCaption
-                  : checkedLabelCaption,
-              style: TextStyle(fontSize: 12),
-            ),
-          ),
+          height: 50,
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.grey,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8))),
+              onPressed: () async {
+                // MaterialPageRoute(builder: (_)=>  AddCategorie());
+                Navigator.of(context).pushNamed("newcategorie");
+              },
+              child: Text("Nv. categorie")),
         ),
-        isExistCategory == true
-            ? Expanded(
-                child: DropdownButtonFormField(
-                decoration: const InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    borderSide: BorderSide(color: Colors.amber),
-                  ),
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (str) {
-                  categorie.text = str;
-                },
-                items: <String>['Boisson', 'Pizza', 'Burger', 'Sandwish']
-                    .map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                hint: Text("Selectioner Categorie"),
-                disabledHint: Text("Disabled"),
-                elevation: 8,
-                style: TextStyle(color: Colors.white, fontSize: 16),
-                icon: Icon(Icons.arrow_drop_down_circle),
-                iconDisabledColor: Colors.red,
-                iconEnabledColor: Colors.green,
-                isExpanded: true,
-                dropdownColor: Colors.deepOrange,
-              ))
-            : Expanded(
-                child: TextField(
-                controller: categorie,
-                decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.amber),
-                        borderRadius: BorderRadius.circular(5)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green),
-                        borderRadius: BorderRadius.circular(5)),
-                    hintText: 'Categorie',
-                    labelText: "Categorie",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5))),
-              )),
+        SizedBox(width: 20),
+        Expanded(
+            child: DropdownButtonFormField(
+          decoration: const InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              borderSide: BorderSide(color: Colors.amber),
+            ),
+            border: OutlineInputBorder(),
+          ),
+          onChanged: (str) {
+            categorie.text = str;
+          },
+          items: globalListOfCategories
+              .map((FCategories value) {
+            return DropdownMenuItem<String>(
+              value: value.categoriesName,
+              child: Text(value.categoriesName),
+            );
+          }).toList(),
+          hint: Text("Selectioner Categorie"),
+          disabledHint: Text("Disabled"),
+          elevation: 8,
+          style: TextStyle(color: Colors.white, fontSize: 16),
+          icon: Icon(Icons.arrow_drop_down_circle),
+          iconDisabledColor: Colors.red,
+          iconEnabledColor: Colors.green,
+          isExpanded: true,
+          dropdownColor: Colors.deepOrange,
+        ))
       ],
     );
   }
@@ -213,7 +234,6 @@ class _DesignationState extends State<Designation> {
           focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.green),
               borderRadius: BorderRadius.circular(5)),
-          hintText: 'Designation',
           labelText: "Designation",
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(5))),
     );

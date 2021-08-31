@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
     return BlocBuilder<ItemsBloc, ItemsStates>(builder: (context, state) {
       if (state is ItemsLoadingState) {
         return const Scaffold(
+          
           body: Center(
             child: CircularProgressIndicator(),
           ),
@@ -66,7 +67,8 @@ class _HomePageState extends State<HomePage> {
           child: CustomScrollView(
             slivers: [
                SliverAppBar(
-                 
+                 actions:[ IconButton(onPressed: ()
+                 {Navigator.of(context).pushNamed("newitem");}, icon: Icon(Icons.add,size: 30,))],
                  pinned: true,
                  expandedHeight:200,
                 backgroundColor: BrandColors.black,

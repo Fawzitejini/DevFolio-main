@@ -7,9 +7,6 @@ import '../../../../public_data.dart';
 
 class FReposetery {
 
-
-
-
   List<FStock> publicStock() {
     return globalListOfStock;
   }

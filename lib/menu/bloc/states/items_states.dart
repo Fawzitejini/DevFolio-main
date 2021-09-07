@@ -12,7 +12,8 @@ class ItemsLoadedState extends ItemsStates {
   List<FStock> catalogue;
   List<FStock> newItems;
   List<FStock> slaesItems;
-  ItemsLoadedState({ this.catalogue,  this.categorie,this.newItems,this.slaesItems});
+  List<FStock> filterItems;
+  ItemsLoadedState({ this.catalogue,  this.categorie,this.newItems,this.slaesItems,this.filterItems});
 }
 class ItemsFailedLoadState extends ItemsStates {
   String errorMessage;

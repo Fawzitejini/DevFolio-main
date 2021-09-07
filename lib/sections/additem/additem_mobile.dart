@@ -5,9 +5,17 @@ import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
 import 'package:folio/menu/bloc/repository/setstock.dart';
 import 'package:folio/menu/constants/data_converter.dart';
 import 'package:folio/menu/constants/own_colors.dart';
+import 'package:folio/menu/ui_states/master_pages/main_page.dart';
 
+import '../../constants.dart';
 import '../../public_data.dart';
 
+FCategories getCategorie(String categorieName) {
+  var _cateorieName = globalListOfCategories
+      .where((element) => element.categoriesName == categorieName)
+      .first;
+  return _cateorieName;
+}
 
 bool isExistCategory = false;
 String image;
@@ -33,6 +41,7 @@ class _AddItemState extends State<AddItem> {
   @override
   Widget build(BuildContext context) {
     FStock _stock = FStock();
+    double salesP;
     return Scaffold(
         backgroundColor: BrandColors.xboxGrey,
         body: Padding(
@@ -98,22 +107,26 @@ class _AddItemState extends State<AddItem> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8))),
                       onPressed: () async {
+               isNumeric(salesPrice.text)          == false
+                            ? salesP = 0
+                            : salesP = double.parse(salesPrice.text);
                         try {
                           _stock.productName = designation.text;
-
                           _stock.isSales = isSale;
                           _stock.productDiscreption = description.text;
-                          _stock.productImage = image == null ? null : image;
+                          _stock.productImage = image == null ? "" : image;
                           _stock.productUnitPrice =
                               double.parse(unitPrice.text);
-                          _stock.productSalesPrice =
-                              double.parse(salesPrice.text);
+                          _stock.productSalesPrice = salesP;
                           await SetData.setNewitems(
                               _stock,
                               FCategories(
-                                  categoriesId: "Test",
-                                  categoriesName: "Test",
-                                  categoriesImage: "Nan"));
+                                  categoriesId: globalCategories.categoriesId,
+                                  categoriesName:
+                                      globalCategories.categoriesName,
+                                  categoriesImage:
+                                      globalCategories.categoriesImage));
+                          globalListOfStock.add(_stock);
                           Navigator.of(context).pop();
                         } catch (e) {
                           showDialog(
@@ -122,7 +135,7 @@ class _AddItemState extends State<AddItem> {
                                 return AlertDialog(
                                   backgroundColor: BrandColors.xboxGrey,
                                   scrollable: true,
-                                  title: Text('Login',
+                                  title: Text('Erreur ',
                                       style: TextStyle(color: Colors.amber)),
                                   content: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -148,6 +161,22 @@ class _AddItemState extends State<AddItem> {
                         }
                       },
                       child: Text("Sauvgardez"))),
+              SizedBox(
+                height: 20,
+              ),
+              Container(
+                height: 40,
+                width: double.infinity,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: kPrimaryColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8))),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Annulez")),
+              )
             ],
           ),
         ));
@@ -176,7 +205,9 @@ class _CheckWidgetState extends State<CheckWidget> {
                       borderRadius: BorderRadius.circular(8))),
               onPressed: () async {
                 // MaterialPageRoute(builder: (_)=>  AddCategorie());
-                Navigator.of(context).pushNamed("newcategorie");
+                Navigator.of(context)
+                    .pushNamed("newcategorie")
+                    .then((value) => setState(() {}));
               },
               child: Text("Nv. categorie")),
         ),
@@ -191,10 +222,12 @@ class _CheckWidgetState extends State<CheckWidget> {
             border: OutlineInputBorder(),
           ),
           onChanged: (str) {
-            categorie.text = str;
+            setState(() {
+              globalCategories = getCategorie(str);
+              print(globalCategories.categoriesName);
+            });
           },
-          items: globalListOfCategories
-              .map((FCategories value) {
+          items: globalListOfCategories.map((FCategories value) {
             return DropdownMenuItem<String>(
               value: value.categoriesName,
               child: Text(value.categoriesName),

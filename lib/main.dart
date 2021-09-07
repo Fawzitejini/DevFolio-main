@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
           "newitem": (_) => RootAddItem(),
           "portail": (context) => Splash(),
           "menu": (context) => MenuSplash(),
-          "ourmenu": (context) => BlocMainPage()
+          "ourmenu": (context) => MenuPage()
         },
         debugShowCheckedModeBanner: false,
         title: 'ESSALAM',
@@ -97,15 +97,15 @@ class _SplashState extends State<Splash> {
     await InitialzeApp.initializeApp();
     return Future.value(MainPage());
   }
-
   @override
   Widget build(BuildContext context) {
     return SplashScreen(
       loaderColor: kPrimaryColor,
       navigateAfterFuture: loadfromFuture(),
-      title: const Text('Bienvenu au platform essalam'),
+      title: const Text('Groupe essalam'),
       image: Image.network(
-          "https://img.20mn.fr/4h6nRiywT-K3L4xrdTrjjA/648x360_simulation-informatique-disque-accretion-autour-horizon-trou-noir.jpg"),
+          "https://img.20mn.fr/4h6nRiywT-K3L4xrdTrjjA/648x360_simulation-informatique-disque-accretion-autour-horizon-trou-noir.jpg",
+          width: 80,height: 80,),
       backgroundColor: BrandColors.black,
       styleTextUnderTheLoader: const TextStyle(),
     );
@@ -191,7 +191,7 @@ class _MenuSplashState extends State<MenuSplash> {
   Future<Widget> loadfromFuture() async {
      await InitialzeApp.initializeApp();
     // await Freposetory.builds();
-    return Future.value(BlocMainPage());
+    return Future.value(MenuPage());
   }
 
   @override

@@ -51,6 +51,7 @@ dependencies:
   moor: ^4.4.1
   firebase_db_web_unofficial: ^0.0.2
   file_picker: ^4.0.0
+  collection: ^1.15.0
 
   flutter_custom_clippers: ^2.0.0
 dev_dependencies:

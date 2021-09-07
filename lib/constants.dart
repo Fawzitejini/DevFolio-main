@@ -153,7 +153,7 @@ final kContactTitles = [
 ];
 
 final kContactDetails = [
-  "Attock, Pakistan",
-  "(+92) 346 0159889",
-  "hamza.6.shakeel@gmail.com"
+  "Laatmna, Berkane",
+  "(+212) 6 50972021",
+  "fawzitejini5@gmail.com"
 ];

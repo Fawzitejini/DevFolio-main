@@ -3,6 +3,7 @@ import 'package:folio/menu/constants/own_colors.dart';
 
 import 'additem_mobile.dart';
 class AddItemDesktop extends StatefulWidget {
+  
   const AddItemDesktop({Key key}) : super(key: key);
 
   @override
@@ -24,8 +25,7 @@ class _AddItemDesktopState extends State<AddItemDesktop> {
               color: BrandColors.xboxGrey,
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: AddItem(),
-              
+              child: AddItem(),  
             ),),),
           ) ,
         ),

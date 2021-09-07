@@ -1,10 +1,13 @@
 import 'package:firebase_db_web_unofficial/firebasedbwebunofficial.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_builder/responsive_builder.dart';
+
 import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
 import 'package:folio/menu/constants/data_converter.dart';
 import 'package:folio/menu/constants/own_colors.dart';
-import 'package:responsive_builder/responsive_builder.dart';
+import 'package:folio/menu/ui_states/master_pages/main_page.dart';
 
+import '../../constants.dart';
 import '../../public_data.dart';
 
 String catImage;
@@ -91,13 +94,20 @@ class _AddCategorieMobileState extends State<AddCategorieMobile> {
                   FirebaseDatabaseWeb.instance
                       .reference()
                       .child("categorie")
-                      .child("path")
+                      .child(getRandString(10))
                       .set({
+                    "CategoriesID": "Cat" + randomNumber(10, 999).toString(),
                     "categoriename": _categorie.categoriesName,
                     "photo": _categorie.categoriesImage,
                   });
                   globalListOfCategories.add(_categorie);
                   Navigator.of(context).pop();
+                   categorieName.text = null;
+                                      catImage = null;
+                                      setState(() {
+                                        
+                                      });
+                  //    Navigator.of(context).pushReplacementNamed("newitem");
                 } catch (e) {
                   showDialog(
                       context: context,
@@ -130,6 +140,22 @@ class _AddCategorieMobileState extends State<AddCategorieMobile> {
                 }
               },
               child: Text("Sauvgardez")),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          height: 40,
+          width: double.infinity,
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: kPrimaryColor,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8))),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Annulez")),
         )
       ]),
     ));
@@ -144,6 +170,10 @@ class AddCategorieDesktop extends StatefulWidget {
 }
 
 class _AddCategorieDesktopState extends State<AddCategorieDesktop> {
+  final ValueChanged<FCategories> categorie;
+
+  _AddCategorieDesktopState({this.categorie});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -228,17 +258,28 @@ class _AddCategorieDesktopState extends State<AddCategorieDesktop> {
                                 onPressed: () async {
                                   try {
                                     FCategories _categorie = FCategories(
-                      categoriesImage: catImage,
-                      categoriesName: categorieName.text);
-                                       FirebaseDatabaseWeb.instance
-                      .reference()
-                      .child("categorie")
-                      .child("path")
-                      .set({
-                    "categoriename": _categorie.categoriesName,
-                    "photo": _categorie.categoriesImage,
-                  });
+                                        categoriesImage: catImage,
+                                        categoriesName: categorieName.text);
+                                    FirebaseDatabaseWeb.instance
+                                        .reference()
+                                        .child("category")
+                                        .child(getRandString(10))
+                                        .set({
+                                      "CategoriesID": "Cat" +
+                                          randomNumber(10, 999).toString(),
+                                      "categoriename":
+                                          _categorie.categoriesName,
+                                      "photo": _categorie.categoriesImage,
+                                    });
                                     Navigator.of(context).pop();
+                                    setState(() {
+                                      categorieName.text = null;
+                                      catImage = null;
+                                      setState(() {
+                                        
+                                      });
+                                  
+                                    });
                                   } catch (e) {
                                     showDialog(
                                         context: context,
@@ -276,6 +317,23 @@ class _AddCategorieDesktopState extends State<AddCategorieDesktop> {
                                   }
                                 },
                                 child: Text("Sauvgardez")),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            height: 40,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: kPrimaryColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Annulez")),
                           )
                         ]),
                   ))),
@@ -286,7 +344,9 @@ class _AddCategorieDesktopState extends State<AddCategorieDesktop> {
 }
 
 class AddCategorie extends StatelessWidget {
-  const AddCategorie({Key key}) : super(key: key);
+  const AddCategorie({
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

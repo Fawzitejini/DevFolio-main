@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:firebase/firebase.dart' as app;
 import 'package:firebase_db_web_unofficial/firebasedbwebunofficial.dart';
 import 'package:folio/public_data.dart';
+import 'package:folio/sections/additem/additem_mobile.dart';
 
 class FStock {
   FStock({
@@ -118,6 +119,7 @@ class InitialzeApp {
 
     try {
       await getItems().then((value) => globalListOfStock = value);
+      await getAllCategorie().then((value) => globalListOfCategories = value);
       print("Out error with lenght : " + globalListOfStock.length.toString());
     } catch (e) {
       print("With error:  " + e.toString());
@@ -144,7 +146,15 @@ Future<List<FStock>> getItems() async {
     return _stock;
   }
   _stock.clear();
+  int count = 0;
   for (var item in _database.values) {
+    count++;
+    bool _isSales ;
+    if (item['issales'].toString() == "true") {
+      _isSales = true;
+    } else {
+      _isSales = false;
+    }
     FStock _fstock = FStock(
         datePublier: item["datepublier"] == null
             ? DateTime.now().subtract(const Duration(days: 11))
@@ -152,13 +162,38 @@ Future<List<FStock>> getItems() async {
         productId: item['productId'].toString(),
         productName: item['name'],
         productCategories: FCategories.fromJson(item['categorie']),
-        productImage: item['photo'] == null ? "" : item['photo'],
+        productImage: item['photo'] == null ? null : item['photo'],
         productDiscreption: item['description'],
         productUnitPrice: item['price'],
         productSalesPrice: item["saleprice"],
-        isSales: item['issales'] == "true" ? true : false,
+        isSales: _isSales,
         avis: item['avis'] == null ? [] : aviFromJson(item['avis']));
     _stock.add(_fstock);
+    print('Loop is {$count} :' + _isSales.toString() + " and "+ item['issales'].toString());
   }
   return _stock;
+}
+
+Future<List<FCategories>> getAllCategorie() async {
+  List<FCategories> _categories = [];
+  Map _mapOfCategorie = {};
+  await FirebaseDatabaseWeb.instance
+      .reference()
+      .child("categorie")
+      .once()
+      .then((value) {
+    if (value.value != null) {
+      _mapOfCategorie = value.value;
+    }
+  });
+
+  if (_mapOfCategorie.isEmpty) {
+    return _categories;
+  }
+
+  for (var item in _mapOfCategorie.values) {
+    _categories.add(FCategories(
+        categoriesName: item['categoriename'], categoriesImage: item['photo']));
+  }
+  return _categories;
 }

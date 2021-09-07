@@ -9,7 +9,7 @@ class SetData {
   static Map stockToMap(FStock stock, FCategories categories) {
     return {
       "datepublier": DateTime.now().toString(),
-      "productId": randomNumber(100, 9999).toString(),
+      "productId":"Cat"+ randomNumber(100, 999).toString(),
       "name": stock.productName,
       "categorie": FCategories.productCategoriesTomMap(categories),
       "photo": stock.productImage,

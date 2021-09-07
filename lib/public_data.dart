@@ -24,8 +24,7 @@ int randomNumber(min, max) {
 }
 
 Future<String> uploadImage() async {
-  FilePickerResult result=
-  await FilePicker.platform.pickFiles(
+  FilePickerResult result = await FilePicker.platform.pickFiles(
     type: FileType.custom,
     allowedExtensions: ['jpg', 'png'],
   );
@@ -34,8 +33,13 @@ Future<String> uploadImage() async {
     Uint8List fileBytes = result.files.first.bytes;
     //String fileName = result.files.first.name;
     return base64Encode(fileBytes);
-  } else {
-    
-  }
+  } else {}
   return null;
+}
+
+bool isNumeric(String s) {
+  if (s == null) {
+    return false;
+  }
+  return double.tryParse(s) != null;
 }

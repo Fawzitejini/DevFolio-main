@@ -1,7 +1,8 @@
 import 'package:animations/animations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:folio/menu/bloc/bloc/items_bloc.dart';
 import 'package:folio/menu/bloc/events/items_events.dart';
 import 'package:folio/menu/bloc/repository/firebase_reposetory.dart';
@@ -10,6 +11,8 @@ import 'package:folio/menu/bloc/states/items_states.dart';
 import 'package:folio/menu/constants/data_converter.dart';
 import 'package:folio/menu/constants/own_colors.dart';
 import 'package:folio/sections/categories/categorie.dart';
+import 'package:folio/users/facebook_users.dart';
+import 'package:folio/users/google_users.dart';
 
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -87,6 +90,17 @@ class _HomePageState extends State<HomePage> {
               SliverAppBar(
                   actions: [
                     IconButton(
+                        onPressed: () async {
+                          /*    Users user = Users();
+                         
+                          await user.signInWithGoogle().then((value) => print(value.name)); */
+                          //    Navigator.of(context).pushNamed('facebooktest');
+                        },
+                        icon: Icon(
+                          Icons.facebook,
+                          size: 30,
+                        )),
+                    IconButton(
                         onPressed: () {
                           Navigator.of(context)
                               .pushNamed("newitem")
@@ -105,7 +119,6 @@ class _HomePageState extends State<HomePage> {
                       background:
                           Image.asset("assets/banner.jpg", fit: BoxFit.fill))),
               SliverToBoxAdapter(
-
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
@@ -130,8 +143,6 @@ class _HomePageState extends State<HomePage> {
                           ])),
                 ),
               ),
-           
-           
               SliverGrid(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   var P = state.catalogue[index];
@@ -292,7 +303,6 @@ class _HomePageState extends State<HomePage> {
                           }
                         },
                         openBuilder: (context, void Function() action) {
-                          
                           return CustomScrollView(slivers: [
                             SliverAppBar(
                               backgroundColor: BrandColors.darkgray,
@@ -329,60 +339,58 @@ class _HomePageState extends State<HomePage> {
                                     Padding(
                                         padding:
                                             const EdgeInsets.only(right: 20),
-                                        child:
-                                    Padding(
-                                                          padding:
-                                                              const EdgeInsets.only(
-                                                                  right: 20),
-                                                          child: P
-                                                                        .isSales ==
-                                                                    false ?
-                                                          
-                                                          Text(
-                                                            DataConverter.currencyConvert(
-                                                                P.productUnitPrice
-                                                                ),
-                                                            style: TextStyle(
-                                                                fontSize: 25,
-                                                                color:
-                                                                    kPrimaryColor),
-                                                          ):
-                                                          Wrap(alignment: WrapAlignment.center,
-                                                            
-                                                            direction: Axis.horizontal,
-                                                          children: 
-                                                          [
-                                                            Padding(
-                                                              padding: const EdgeInsets.only(right: 10),
-                                                              child: Container(height:30,
-                                                                color:BrandColors.googleOrange , width: 50,
-                                                                child:
-                                                              Center(
-                                                                child: Text("-" +
-                                                                  
-                                                                  (((P.productUnitPrice-P.productSalesPrice )/P.productUnitPrice  * 100).toStringAsFixed(0)+'%')
-                                                                  ,style: TextStyle(
-                                                                    fontSize: 17,
-                                                                    color:
-                                                                        Colors.white)
-                                                                  ),
-                                                              )
-
-                                                              ),
-                                                            ),Text(
-                                                            DataConverter.currencyConvert(
-                                                                P.productSalesPrice
-                                                                ),
-                                                            style: TextStyle(
-                                                                fontSize: 25,
-                                                                color:
-                                                                    kPrimaryColor),
-                                                          )
-
-                                                          ],
-                                                          )
-                                                          )
-                                           )       ],
+                                        child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 20),
+                                            child: P.isSales == false
+                                                ? Text(
+                                                    DataConverter
+                                                        .currencyConvert(
+                                                            P.productUnitPrice),
+                                                    style: TextStyle(
+                                                        fontSize: 25,
+                                                        color: kPrimaryColor),
+                                                  )
+                                                : Wrap(
+                                                    alignment:
+                                                        WrapAlignment.center,
+                                                    direction: Axis.horizontal,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 10),
+                                                        child: Container(
+                                                            height: 30,
+                                                            color: BrandColors
+                                                                .googleOrange,
+                                                            width: 50,
+                                                            child: Center(
+                                                              child: Text(
+                                                                  "-" +
+                                                                      (((P.productUnitPrice - P.productSalesPrice) / P.productUnitPrice * 100).toStringAsFixed(
+                                                                              0) +
+                                                                          '%'),
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          17,
+                                                                      color: Colors
+                                                                          .white)),
+                                                            )),
+                                                      ),
+                                                      Text(
+                                                        DataConverter
+                                                            .currencyConvert(P
+                                                                .productSalesPrice),
+                                                        style: TextStyle(
+                                                            fontSize: 25,
+                                                            color:
+                                                                kPrimaryColor),
+                                                      )
+                                                    ],
+                                                  )))
+                                  ],
                                 ),
                               ),
                             ),
@@ -403,7 +411,47 @@ class _HomePageState extends State<HomePage> {
                                   style: const TextStyle(color: Colors.white),
                                 ),
                               ),
-                            )
+                            ),
+                            SliverToBoxAdapter(
+                              child: ExpansionTile(
+                                title: Text("Avis notre client"),
+                                subtitle: facebookUserLogin.id == null
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: SizedBox(
+                                            height: 40,
+                                            child: Row(children: [
+                                              Expanded(
+                                                child: Text(facebookUserLogin.fullName !=null ?facebookUserLogin.fullName
+                                                :"Pour publier to avis veuillez inscrivez vous\npar votre compte google ou facebook"),
+                                                flex: 2,
+                                              ),
+                                              VerticalDivider(),
+                                              IconButton(
+                                                icon: Icon(
+                                                    Icons.add_comment_outlined),
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pushNamed("newavis").then((value) => setState((){}));
+                                                },
+                                              )
+                                            ])),
+                                      )
+                                    : Row(children:[Expanded(child: Text(facebookUserLogin.fullName)),
+                                     VerticalDivider(),
+                                              IconButton(
+                                                icon: Icon(
+                                                    Icons.add_comment_outlined),
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pushNamed("newavis").then((value) => setState((){}));
+                                                },
+                                              )])
+                                     ,
+                              ),
+                            ),
+                            /**   SliverToBoxAdapter(child:),
+                        SliverList(delegate:SliverChildBuilderDelegate((context, index) => null))*/
                           ]);
                         }),
                   );

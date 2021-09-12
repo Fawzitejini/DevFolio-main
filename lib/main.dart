@@ -1,20 +1,19 @@
-import 'package:firebase/firebase.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:folio/constants.dart';
-import 'package:folio/menu/bloc/repository/firebase_reposetory.dart';
 import 'package:folio/menu/constants/own_colors.dart';
+import 'package:folio/menu/ui_states/avis/avis.dart';
 import 'package:folio/sections/mainSection.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slimy_card/slimy_card.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'nou_used/bloc_stock_reposetery.dart';
 import 'menu/bloc/repository/firebase_stock_model.dart';
 import 'menu/ui_states/master_pages/main_page.dart';
 import 'dart:async';
 
 import 'sections/additem/addcategorie.dart';
 import 'sections/additem/additem.dart';
-import 'sections/additem/additem_mobile.dart';
+import 'users/facebook_users.dart';
+import 'users/google_users.dart';
 
 //import 'package:url_strategy/url_strategy.dart';
 class Testfirebase {
@@ -40,6 +39,7 @@ class Testfirebase {
 }
 
 Future<void> main() async {
+  // setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MyApp());
@@ -53,8 +53,9 @@ class MyApp extends StatelessWidget {
           "newcategorie": (_) => AddCategorie(),
           "newitem": (_) => RootAddItem(),
           "portail": (context) => Splash(),
-          "menu": (context) => MenuSplash(),
-          "ourmenu": (context) => MenuPage()
+          "newavis": (context) => CustomerAvis(),
+          "ourmenu": (context) => MenuSplash(),
+          "facebooktest":(_)=>MyApp2()
         },
         debugShowCheckedModeBanner: false,
         title: 'ESSALAM',
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
           //fontFamily: "Montserrat",
           highlightColor: kPrimaryColor,
         ),
-        home: MenuSelector());
+        home: Splash());
   }
 }
 // MainPage()
@@ -97,15 +98,20 @@ class _SplashState extends State<Splash> {
     await InitialzeApp.initializeApp();
     return Future.value(MainPage());
   }
+
   @override
   Widget build(BuildContext context) {
     return SplashScreen(
       loaderColor: kPrimaryColor,
       navigateAfterFuture: loadfromFuture(),
       title: const Text('Groupe essalam'),
-      image: Image.network(
-          "https://img.20mn.fr/4h6nRiywT-K3L4xrdTrjjA/648x360_simulation-informatique-disque-accretion-autour-horizon-trou-noir.jpg",
-          width: 80,height: 80,),
+      image: Image.asset(
+        "aseets/logo.png",
+        width: 250,
+        height: 250,
+        cacheHeight: 250,
+        cacheWidth: 250,
+      ),
       backgroundColor: BrandColors.black,
       styleTextUnderTheLoader: const TextStyle(),
     );
@@ -167,7 +173,6 @@ class MenuSelector extends StatelessWidget {
                         primary: BrandColors.black),
                     onPressed: () {
                       Navigator.of(context).pushReplacementNamed("menu");
-                      
                     },
                     child: Text("Contunier"),
                   ),
@@ -189,7 +194,7 @@ class MenuSplash extends StatefulWidget {
 
 class _MenuSplashState extends State<MenuSplash> {
   Future<Widget> loadfromFuture() async {
-     await InitialzeApp.initializeApp();
+    await InitialzeApp.initializeApp();
     // await Freposetory.builds();
     return Future.value(MenuPage());
   }

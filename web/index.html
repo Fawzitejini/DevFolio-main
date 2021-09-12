@@ -39,22 +39,39 @@
 <script src="https://api.daytonsquareroots.org/firebasedatabaseweb/v0.0.2/app.js" defer></script>
  <script src="https://maps.googleapis.com/maps/api/js?key=e687196c4d1db2bda1466f248e4fe6ddff4f43c6"></script>
  <script>
-      const firebaseConfig = {
-  apiKey: "AIzaSyDHtURV4WTAuYl3X63u862WhboqlPsLze0",
+     const firebaseConfig = {
+  apiKey: "AIzaSyBiumf7fRDFxjDhReQHs-0yyKDUiUMa6xs",
   authDomain: "fouzi-87672.firebaseapp.com",
   databaseURL: "https://fouzi-87672.firebaseio.com",
   projectId: "fouzi-87672",
   storageBucket: "fouzi-87672.appspot.com",
   messagingSenderId: "960199945853",
-  appId: "1:960199945853:web:91598c0f6cfbafb9ce8b14"
+  appId: "1:960199945853:web:5c7b75c4ae4a9c9bce8b14"
 };
 firebase.initializeApp(firebaseConfig); 
     </script>
   
 </head>
+<!--Facebook SDK config -->
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId            : '602707507575549',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v7.0'
+    });
+  };
+</script>
+
+<!-- Facebook JS CDN SDK -->
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+
+<!-- for interop with dart through this plugin -->
+<script src="https://flutterfacebooklogin.s3.us-east-2.amazonaws.com/web_interop.js"></script>
 <body>
-  <meta name="google-signin-client_id" 
-  content="960199945853-mvnbnvt6tmv7eu3cb07gq962q6emaq8c.apps.googleusercontent.com">
+  <meta name="Essalam" 
+  content="960199945853-mvnbnvt6tmv7eu3cb07gq962q6emaq8c.apps.googleusercontent.com"/>
 
 
 

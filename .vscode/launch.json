@@ -15,6 +15,11 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
-        }
+        },
+        {
+            "name": "DevFolio-main  (port 7357)",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--web-port", "7357"]}
     ]
 }

@@ -60,7 +60,9 @@ class _CategorieState extends State<Categorie> {
                           padding: const EdgeInsets.all(10),
                           child: Column(
                             children: [
-                              Text(_categorie.categoriesName),
+                              Text(_categorie.categoriesName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,),
                               Padding(
                                 padding: const EdgeInsets.all(5),
                                 child: Image.memory(

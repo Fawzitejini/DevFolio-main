@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:firebase/firebase.dart' as app;
 import 'package:firebase_db_web_unofficial/firebasedbwebunofficial.dart';
 import 'package:folio/public_data.dart';
-import 'package:folio/sections/additem/additem_mobile.dart';
+import 'package:folio/users/facebook_users.dart';
 
 class FStock {
   FStock({
@@ -70,12 +70,12 @@ class FAvis {
   String id;
   String comment;
   double rate;
-  FUsers user;
+  FacebookUserLogin user;
   FAvis({this.comment, this.rate, this.user});
 
   factory FAvis.fromJson(Map<String, dynamic> json) => FAvis(
         comment: json["Comment"],
-        user: FUsers.fromJson(json["User"]),
+        user: FacebookUserLogin.fromJson(json["User"]),
         rate: json["Rate"],
       );
 }
@@ -116,11 +116,12 @@ class InitialzeApp {
       print("error initialize: {$e}");
       return;
     }
-
     try {
+      getCokie(facebookUserLogin.id,
+        facebookUserLogin.fullName,
+          facebookUserLogin.email);
       await getItems().then((value) => globalListOfStock = value);
       await getAllCategorie().then((value) => globalListOfCategories = value);
-      print("Out error with lenght : " + globalListOfStock.length.toString());
     } catch (e) {
       print("With error:  " + e.toString());
     }
@@ -149,7 +150,7 @@ Future<List<FStock>> getItems() async {
   int count = 0;
   for (var item in _database.values) {
     count++;
-    bool _isSales ;
+    bool _isSales;
     if (item['issales'].toString() == "true") {
       _isSales = true;
     } else {
@@ -169,7 +170,10 @@ Future<List<FStock>> getItems() async {
         isSales: _isSales,
         avis: item['avis'] == null ? [] : aviFromJson(item['avis']));
     _stock.add(_fstock);
-    print('Loop is {$count} :' + _isSales.toString() + " and "+ item['issales'].toString());
+    print('Loop is {$count} :' +
+        _isSales.toString() +
+        " and " +
+        item['issales'].toString());
   }
   return _stock;
 }

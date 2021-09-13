@@ -1,8 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
 import 'package:folio/users/facebook_users.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../public_data.dart';
 
 class UserAuth {
   static void googleAuth() {
@@ -52,7 +56,7 @@ class Users {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String name;
   String imageUrl;
-  Future<void> signInWithGoogle() async {
+  Future<void> signInWithGoogle(BuildContext context) async {
     // Initialize Firebase
     await Firebase.initializeApp();
     User user;
@@ -71,11 +75,23 @@ class Users {
       facebookUserLogin.id = user.uid;
       facebookUserLogin.fullName = user.displayName;
       facebookUserLogin.email = user.email;
+        bool isDone = false;
+        await CurrentItemAvis.listOfAvis(globalStock).then((value) {
+          var m =
+              value.where((element) => element.user.id == facebookUserLogin.id);
+          if (m.length > 0) {
+            isDone = true;
+          } else {
+            isDone = false;
+          }
+        });
+        if (isDone==true){Navigator.of(context).pushReplacementNamed("ourmenu");}
    //   googleUser.imageUrl = user.photoURL;
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setBool('auth', true);
     }
+
 
   }
 }

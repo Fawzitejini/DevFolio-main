@@ -52,10 +52,9 @@ class MyApp extends StatelessWidget {
         routes: {
           "newcategorie": (_) => AddCategorie(),
           "newitem": (_) => RootAddItem(),
-          "portail": (context) => Splash(),
+          "index": (context) => Splash(),
           "newavis": (context) => CustomerAvis(),
           "ourmenu": (context) => MenuSplash(),
-          "facebooktest":(_)=>MyApp2()
         },
         debugShowCheckedModeBanner: false,
         title: 'ESSALAM',
@@ -104,14 +103,8 @@ class _SplashState extends State<Splash> {
     return SplashScreen(
       loaderColor: kPrimaryColor,
       navigateAfterFuture: loadfromFuture(),
-      title: const Text('Groupe essalam'),
-      image: Image.asset(
-        "aseets/logo.png",
-        width: 250,
-        height: 250,
-        cacheHeight: 250,
-        cacheWidth: 250,
-      ),
+      title: const Text('Chargement . . .',style:TextStyle(fontSize: 20)),
+      
       backgroundColor: BrandColors.black,
       styleTextUnderTheLoader: const TextStyle(),
     );
@@ -204,12 +197,7 @@ class _MenuSplashState extends State<MenuSplash> {
     return SplashScreen(
       loaderColor: kPrimaryColor,
       navigateAfterFuture: loadfromFuture(),
-      title: const Text('Bienvenu au platform essalam'),
-      image: Image.network(
-        "https://img.20mn.fr/4h6nRiywT-K3L4xrdTrjjA/648x360_simulation-informatique-disque-accretion-autour-horizon-trou-noir.jpg",
-        height: 120,
-        width: 120,
-      ),
+       title: const Text('Chargement . . .',style:TextStyle(fontSize: 20)),
       backgroundColor: BrandColors.black,
       styleTextUnderTheLoader: const TextStyle(),
     );

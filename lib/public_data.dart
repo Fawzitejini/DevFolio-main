@@ -43,3 +43,5 @@ bool isNumeric(String s) {
   }
   return double.tryParse(s) != null;
 }
+
+bool avisEditing = false;

@@ -6,6 +6,7 @@ import 'package:folio/users/facebook_users.dart';
 
 class FStock {
   FStock({
+    this.key,
     this.datePublier,
     this.isSales,
     this.productCategories,
@@ -18,6 +19,7 @@ class FStock {
     this.avis,
     this.rate,
   });
+  String key;
   DateTime datePublier;
   bool isSales;
   FCategories productCategories;
@@ -55,32 +57,23 @@ class FCategories {
   }
 }
 
-List<FAvis> aviFromJson(String str) =>
-    List<FAvis>.from(json.decode(str).map((x) => FAvis.fromJson(x)));
-
 class FAvis {
   static Map avisToDatabase(FAvis avi) {
     return {
       "Comment": avi.comment,
       "Rate": avi.rate,
-      "User": avi.user,
+      "User": FacebookUserLogin.facebookUserToMap(avi.user),
     };
   }
 
-  String id;
+  String key;
   String comment;
   double rate;
   FacebookUserLogin user;
-  FAvis({this.comment, this.rate, this.user});
-
-  factory FAvis.fromJson(Map<String, dynamic> json) => FAvis(
-        comment: json["Comment"],
-        user: FacebookUserLogin.fromJson(json["User"]),
-        rate: json["Rate"],
-      );
+  FAvis({this.key, this.comment, this.rate, this.user});
 }
 
-class FUsers {
+/*class FUsers {
   String id;
   String name;
   String email;
@@ -97,7 +90,7 @@ class FUsers {
         telephone: json["telephone"],
         avatar: json["avatar"],
       );
-}
+}*/
 
 class InitialzeApp {
   static Future<void> initializeApp() async {
@@ -117,8 +110,7 @@ class InitialzeApp {
       return;
     }
     try {
-      getCokie(facebookUserLogin.id,
-        facebookUserLogin.fullName,
+      getCokie(facebookUserLogin.id, facebookUserLogin.fullName,
           facebookUserLogin.email);
       await getItems().then((value) => globalListOfStock = value);
       await getAllCategorie().then((value) => globalListOfCategories = value);
@@ -147,33 +139,31 @@ Future<List<FStock>> getItems() async {
     return _stock;
   }
   _stock.clear();
-  int count = 0;
-  for (var item in _database.values) {
-    count++;
+
+  for (var item in _database.entries) {
     bool _isSales;
-    if (item['issales'].toString() == "true") {
+    if (item.value['issales'].toString() == "true") {
       _isSales = true;
     } else {
       _isSales = false;
     }
     FStock _fstock = FStock(
-        datePublier: item["datepublier"] == null
-            ? DateTime.now().subtract(const Duration(days: 11))
-            : DateTime.parse(item["datepublier"]),
-        productId: item['productId'].toString(),
-        productName: item['name'],
-        productCategories: FCategories.fromJson(item['categorie']),
-        productImage: item['photo'] == null ? null : item['photo'],
-        productDiscreption: item['description'],
-        productUnitPrice: item['price'],
-        productSalesPrice: item["saleprice"],
-        isSales: _isSales,
-        avis: item['avis'] == null ? [] : aviFromJson(item['avis']));
+      key: item.key,
+      datePublier: item.value["datepublier"] == null
+          ? DateTime.now().subtract(const Duration(days: 11))
+          : DateTime.parse(item.value["datepublier"]),
+      productId: item.value['productId'].toString(),
+      productName: item.value['name'],
+      productCategories: FCategories.fromJson(item.value['categorie']),
+      productImage: item.value['photo'] == null ? null : item.value['photo'],
+      productDiscreption: item.value['description'],
+      productUnitPrice: item.value['price'],
+      productSalesPrice: item.value["saleprice"],
+      isSales: _isSales,
+    );
+
+    _fstock.avis = await CurrentItemAvis.listOfAvis(_fstock);
     _stock.add(_fstock);
-    print('Loop is {$count} :' +
-        _isSales.toString() +
-        " and " +
-        item['issales'].toString());
   }
   return _stock;
 }
@@ -201,3 +191,37 @@ Future<List<FCategories>> getAllCategorie() async {
   }
   return _categories;
 }
+
+class CurrentItemAvis {
+  static Future<List<FAvis>> listOfAvis(FStock item) async {
+    List<FAvis> _avis = [];
+    Map _data = {};
+    await FirebaseDatabaseWeb.instance
+        .reference()
+        .child("items")
+        .child(item.key)
+        .child("avis")
+        .once()
+        .then((value) {
+      if (value.value == null) {
+      } else {
+        _data = value.value;
+      }
+
+      for (var item in _data.entries) {
+       
+        //   print(item.value["Comment"] + '\n' + item.value['Rate'] );
+        _avis.add(FAvis(
+            key: item.key,
+            comment: item.value["Comment"].toString(),
+            rate: double.parse(item.value['Rate'].toString()),
+            user: FacebookUserLogin.fromJsonFireBase(item.value['User'])));
+      }
+    });
+
+    return _avis;
+  }
+}
+/** "Comment": avi.comment,
+      "Rate": avi.rate,
+      "User": FacebookUserLogin.facebookUserToMap(avi.user), */

@@ -2,89 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login_web/flutter_facebook_login_web.dart';
+import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
+import 'package:folio/public_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:client_cookie/client_cookie.dart';
-
-class MyApp2 extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp2> {
-  String _message = '';
-  static final facebookSignIn = FacebookLoginWeb();
-
-  Future<Null> _login() async {
-    final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
-
-    switch (result.status) {
-      case FacebookLoginStatus.loggedIn:
-        final FacebookAccessToken accessToken = result.accessToken;
-        _showMessage('''
-         Logged in!
-         
-         Token: ${accessToken.toMap()}
-         User id: ${accessToken.userId}
-         ''');
-        var graphResponse = await http.get(Uri.parse(
-            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${accessToken.token}'));
-        var profile = json.decode(graphResponse.body);
-        print(profile);
-        facebookUserLogin = FacebookUserLogin.fromJson(profile);
-        setCokie(facebookUserLogin.id, facebookUserLogin.fullName,
-            facebookUserLogin.email);
-
-        facebookSignIn.testApi();
-        facebookSignIn.testApi();
-
-        break;
-      case FacebookLoginStatus.cancelledByUser:
-        _showMessage('Login cancelled by the user.');
-        break;
-      case FacebookLoginStatus.error:
-        _showMessage('Something went wrong with the login process.\n'
-            'Here\'s the error Facebook gave us: ${result.errorMessage}');
-        break;
-    }
-  }
-
-  Future<Null> _logOut() async {
-    await facebookSignIn.logOut();
-    _showMessage('Logged out.');
-  }
-
-  void _showMessage(String message) {
-    setState(() {
-      _message = message;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              Text(_message),
-              RaisedButton(
-                onPressed: _login,
-                child: Text("Login with Facebook"),
-              ),
-              RaisedButton(
-                onPressed: _logOut,
-                child: Text("Logout"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class FacebookUserLogin {
   String id;
@@ -92,17 +13,32 @@ class FacebookUserLogin {
   String firstName;
   String lastName;
   String email;
+  String picture;
   FacebookUserLogin(
       {this.id, this.fullName, this.firstName, this.lastName, this.email});
 
   factory FacebookUserLogin.fromJson(Map<String, dynamic> json) =>
       FacebookUserLogin(
-        id: json['id'],
+        id: json['id'].toString(),
         fullName: json["name"],
         firstName: json["first_name"],
         lastName: json["last_name"],
         email: json["email"],
       );
+  factory FacebookUserLogin.fromJsonFireBase(Map<String, dynamic> json) =>
+      FacebookUserLogin(
+        id: json['id'].toString(),
+        fullName: json["fullName"],
+        email: json["email"],
+      );
+  static Map facebookUserToMap(FacebookUserLogin usr) {
+    return {
+      "id": usr.id,
+      "fullName": usr.fullName,
+      "email": usr.email,
+      "photo": usr.picture
+    };
+  }
 }
 
 class LoginByFacebook {
@@ -118,7 +54,7 @@ class LoginByFacebook {
 
   static final facebookSignIn = FacebookLoginWeb();
 
-  static Future<Null> login() async {
+  static Future<Null> login(BuildContext context) async {
     final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
 
     switch (result.status) {
@@ -131,13 +67,24 @@ class LoginByFacebook {
          User id: ${accessToken.userId}
          ''');
         var graphResponse = await http.get(Uri.parse(
-            'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${accessToken.token}'));
+            'https://graph.facebook.com/v2.12/me?fields=name,picture.width(800).height(800),first_name,last_name,email&access_token=${accessToken.token}'));
         var profile = json.decode(graphResponse.body);
         facebookUserLogin = FacebookUserLogin.fromJson(profile);
         setCokie(facebookUserLogin.id, facebookUserLogin.fullName,
             facebookUserLogin.email);
 
         facebookSignIn.testApi();
+        bool isDone = false;
+        await CurrentItemAvis.listOfAvis(globalStock).then((value) {
+          var m =
+              value.where((element) => element.user.id == facebookUserLogin.id);
+          if (m.length > 0) {
+            isDone = true;
+          } else {
+            isDone = false;
+          }
+        });
+        if (isDone==true){Navigator.of(context).pushReplacementNamed("ourmenu");}
         break;
       case FacebookLoginStatus.cancelledByUser:
         _showMessage("Connexion annulée par l'utilisateur.");

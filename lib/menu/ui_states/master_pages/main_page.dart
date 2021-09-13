@@ -10,6 +10,8 @@ import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
 import 'package:folio/menu/bloc/states/items_states.dart';
 import 'package:folio/menu/constants/data_converter.dart';
 import 'package:folio/menu/constants/own_colors.dart';
+import 'package:folio/menu/ui_states/avis/avis.dart';
+import 'package:folio/public_data.dart';
 import 'package:folio/sections/categories/categorie.dart';
 import 'package:folio/users/facebook_users.dart';
 import 'package:folio/users/google_users.dart';
@@ -88,22 +90,17 @@ class _HomePageState extends State<HomePage> {
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
+                  leading: IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('index');
+                    },
+                    icon: Icon(Icons.keyboard_return_sharp),
+                  ),
                   actions: [
-                    IconButton(
-                        onPressed: () async {
-                          /*    Users user = Users();
-                         
-                          await user.signInWithGoogle().then((value) => print(value.name)); */
-                          //    Navigator.of(context).pushNamed('facebooktest');
-                        },
-                        icon: Icon(
-                          Icons.facebook,
-                          size: 30,
-                        )),
                     IconButton(
                         onPressed: () {
                           Navigator.of(context)
-                              .pushNamed("newitem")
+                              .pushReplacementNamed("newitem")
                               .then((value) => setState(() {}));
                         },
                         icon: Icon(
@@ -303,6 +300,21 @@ class _HomePageState extends State<HomePage> {
                           }
                         },
                         openBuilder: (context, void Function() action) {
+                          globalStock = P;
+                          double countItemRating = 0;
+                          double itemRating = 0;
+                          bool isDone = false;
+                          var m = P.avis.where((element) =>
+                              element.user.id == facebookUserLogin.id);
+                          if (m.length > 0) {
+                            m.forEach((element) {
+                              countItemRating += element.rate;
+                            });
+                            itemRating = countItemRating / m.length;
+                            isDone = true;
+                          } else {
+                            isDone = false;
+                          }
                           return CustomScrollView(slivers: [
                             SliverAppBar(
                               backgroundColor: BrandColors.darkgray,
@@ -414,7 +426,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             SliverToBoxAdapter(
                               child: ExpansionTile(
-                                title: Text("Avis notre client"),
+                                title: Text("Avis de notre client"),
                                 subtitle: facebookUserLogin.id == null
                                     ? Padding(
                                         padding: const EdgeInsets.all(5),
@@ -422,8 +434,11 @@ class _HomePageState extends State<HomePage> {
                                             height: 40,
                                             child: Row(children: [
                                               Expanded(
-                                                child: Text(facebookUserLogin.fullName !=null ?facebookUserLogin.fullName
-                                                :"Pour publier to avis veuillez inscrivez vous\npar votre compte google ou facebook"),
+                                                child: Text(facebookUserLogin
+                                                            .fullName !=
+                                                        null
+                                                    ? facebookUserLogin.fullName
+                                                    : "Pour publier to avis veuillez inscrivez vous\npar votre compte google ou facebook"),
                                                 flex: 2,
                                               ),
                                               VerticalDivider(),
@@ -431,23 +446,133 @@ class _HomePageState extends State<HomePage> {
                                                 icon: Icon(
                                                     Icons.add_comment_outlined),
                                                 onPressed: () {
+                                                    currentavis = null;
+                                                        
+                                                        ratingComment.text =
+                                                          null;
+                                                        ratingController =
+                                                            null;
+                                                  avisEditing = false;
                                                   Navigator.of(context)
-                                                      .pushNamed("newavis").then((value) => setState((){}));
+                                                      .pushReplacementNamed(
+                                                          "newavis")
+                                                      .then((value) =>
+                                                          setState(() {}));
                                                 },
                                               )
                                             ])),
                                       )
-                                    : Row(children:[Expanded(child: Text(facebookUserLogin.fullName)),
-                                     VerticalDivider(),
-                                              IconButton(
+                                    : Row(children: [
+                                        Expanded(
+                                            child: Text(
+                                                facebookUserLogin.fullName)),
+                                        VerticalDivider(),
+                                        isDone == false
+                                            ? IconButton(
                                                 icon: Icon(
                                                     Icons.add_comment_outlined),
                                                 onPressed: () {
+                                                  currentavis = null;
+                                                        
+                                                        ratingComment.text =
+                                                          null;
+                                                        ratingController =
+                                                            null;
                                                   Navigator.of(context)
-                                                      .pushNamed("newavis").then((value) => setState((){}));
+                                                      .pushReplacementNamed(
+                                                          "newavis")
+                                                      .then((value) =>
+                                                          setState(() {}));
                                                 },
-                                              )])
-                                     ,
+                                              )
+                                            : Container()
+                                      ]),
+                                children: [
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height,
+                                    child: ListView.builder(
+                                        itemCount: P.avis.length,
+                                        itemBuilder: (_, ii) {
+                                          var _avis = P.avis[ii];
+                                          print(_avis.user.fullName);
+
+                                          if (facebookUserLogin.id != null) {
+                                            if (_avis.user.id ==
+                                                facebookUserLogin.id) {
+                                              return Column(children: [
+                                                ListTile(
+                                                  title: Text(_avis
+                                                              .user.fullName ==
+                                                          null
+                                                      ? "null"
+                                                      : _avis.user.fullName),
+                                                  trailing: IconButton(
+                                                      onPressed: () {
+                                                         currentavis = _avis;
+                                                        avisEditing = true;
+                                                        ratingComment.text =
+                                                            _avis.comment;
+                                                        ratingController =
+                                                            _avis.rate;
+                                                        Navigator.of(context)
+                                                            .pushReplacementNamed(
+                                                                "newavis")
+                                                            .then((value) =>
+                                                                setState(
+                                                                    () {}));
+                                                      },
+                                                      icon: Icon(Icons.edit)),
+                                                  subtitle: Text(_avis.comment),
+                                                  leading: Wrap(children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3),
+                                                      child: Icon(Icons.star,
+                                                          size: 15),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3),
+                                                      child: Text(DataConverter
+                                                          .numberConvert(
+                                                              itemRating)),
+                                                    )
+                                                  ]),
+                                                ),
+                                                Divider(height: 20)
+                                              ]);
+                                            }
+                                          }
+                                         
+                                          return Column(children: [
+                                            ListTile(
+                                              title: Text(
+                                                  _avis.user.fullName == null
+                                                      ? "Null"
+                                                      : _avis.user.fullName),
+                                              subtitle: Text(_avis.comment),
+                                              leading: Wrap(children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(3),
+                                                  child: Icon(Icons.star,
+                                                      size: 15),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(3),
+                                                  child: Text(
+                                                      _avis.rate.toString()),
+                                                )
+                                              ]),
+                                            ),
+                                            Divider(height: 20)
+                                          ]);
+                                        }),
+                                  )
+                                ],
                               ),
                             ),
                             /**   SliverToBoxAdapter(child:),
@@ -520,7 +645,13 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
   Widget build(BuildContext context) {
     return BlocBuilder<ItemsBloc, ItemsStates>(builder: (context, state) {
       if (state is ItemsLoadingState) {
-        return const Scaffold(
+        return Scaffold(
+          appBar: AppBar(
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, "index");
+                  },
+                  icon: Icon(Icons.keyboard_return_outlined))),
           body: Center(
             child: CircularProgressIndicator(),
           ),
@@ -530,11 +661,11 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
           color: BrandColors.black,
           child: CustomScrollView(
             slivers: [
-              SliverAppBar(
+              /*    SliverAppBar(
                   actions: [
                     IconButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed("newitem");
+                          Navigator.of(context).pushReplacementNamed("newitem");
                         },
                         icon: Icon(
                           Icons.add,
@@ -547,7 +678,10 @@ class _HomePageDesktopState extends State<HomePageDesktop> {
                   flexibleSpace: FlexibleSpaceBar(
                       title: Text("Tous les produits"),
                       background:
-                          Image.asset("assets/banner.jpg", fit: BoxFit.fill))),
+                          Image.asset("assets/banner.jpg", fit: BoxFit.fill)),
+                 ),
+           */
+
               SliverGrid(
                 delegate: SliverChildBuilderDelegate((context, index) {
                   var P = state.catalogue[index];

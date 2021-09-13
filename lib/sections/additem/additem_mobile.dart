@@ -79,7 +79,7 @@ class _AddItemState extends State<AddItem> {
                                   image = await uploadImage();
                                   setState(() {});
                                 },
-                                child: Text("upload image")),
+                                child: Text("Charger image")),
                           ))),
                 ],
               ),
@@ -130,7 +130,7 @@ class _AddItemState extends State<AddItem> {
                                   categoriesImage:
                                       globalCategories.categoriesImage));
                           globalListOfStock.add(_stock);
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pushReplacementNamed("ourmenu");
                         } catch (e) {
                           showDialog(
                               context: context,
@@ -153,7 +153,7 @@ class _AddItemState extends State<AddItem> {
                                     // ignore: deprecated_member_use
                                     IconButton(
                                       onPressed: () {
-                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pushReplacementNamed("ourmenu");
                                       },
                                       icon: Icon(Icons.close,
                                           color: Colors.white),
@@ -176,7 +176,7 @@ class _AddItemState extends State<AddItem> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8))),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      Navigator.of(context).pushReplacementNamed("ourmenu");
                     },
                     child: Text("Annulez")),
               )

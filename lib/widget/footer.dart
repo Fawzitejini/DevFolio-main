@@ -12,10 +12,25 @@ class Footer extends StatelessWidget {
       width: width,
       color: Colors.grey[900],
       child: Center(
-        child: Text(
-          "© Tous droit reservé pour essalam",
-          style: GoogleFonts.montserrat(fontWeight: FontWeight.w100),
-        ),
+        child: Wrap(
+          children: [
+            MouseRegion(
+  cursor: SystemMouseCursors.click,
+    child: GestureDetector(
+      child: Text(
+            "Privacy & policy",
+            style: GoogleFonts.montserrat(fontWeight: FontWeight.w100),
+          ),
+      onTap: () {},
+    ),
+  ),
+         
+            VerticalDivider(width:20),
+            Text(
+            "© Tous droit reservé pour essalam",
+            style: GoogleFonts.montserrat(fontWeight: FontWeight.w100),
+          ),
+       ] ),
       ),
     );
   }

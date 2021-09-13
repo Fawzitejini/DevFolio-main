@@ -7,8 +7,11 @@ import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
 import 'package:folio/menu/bloc/states/items_states.dart';
 import 'package:folio/menu/constants/data_converter.dart';
 import 'package:folio/menu/constants/own_colors.dart';
+import 'package:folio/menu/ui_states/avis/avis.dart';
+import 'package:folio/users/facebook_users.dart';
 
 import '../../constants.dart';
+import '../../public_data.dart';
 
 class Categorie extends StatefulWidget {
   const Categorie({Key key}) : super(key: key);
@@ -296,6 +299,21 @@ class _CategorieState extends State<Categorie> {
                                           },
                                           openBuilder:
                                               (context, void Function() action) {
+                                                 globalStock = P;
+                          double countItemRating = 0;
+                          double itemRating = 0;
+                          bool isDone = false;
+                          var m = P.avis.where((element) =>
+                              element.user.id == facebookUserLogin.id);
+                          if (m.length > 0) {
+                            m.forEach((element) {
+                              countItemRating += element.rate;
+                            });
+                            itemRating = countItemRating / m.length;
+                            isDone = true;
+                          } else {
+                            isDone = false;
+                          }
                                             return CustomScrollView(slivers: [
                                               SliverAppBar(
                                                 backgroundColor:
@@ -414,6 +432,162 @@ class _CategorieState extends State<Categorie> {
                                                   ),
                                                 ),
                                               )
+                                            , 
+                                             SliverToBoxAdapter(
+                                             child: Padding(
+                                              padding: const EdgeInsets.only(right:20,left: 20),
+                                              child: ExpansionTile(
+                                  title: Text("Avis de notre client"),
+                                  subtitle: facebookUserLogin.id == null
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: SizedBox(
+                                              height: 40,
+                                              child: Row(children: [
+                                                Expanded(
+                                                  child: Text(facebookUserLogin
+                                                              .fullName !=
+                                                          null
+                                                      ? facebookUserLogin.fullName
+                                                      : "Pour publier to avis veuillez inscrivez vous\npar votre compte google ou facebook"),
+                                                  flex: 2,
+                                                ),
+                                                VerticalDivider(),
+                                                IconButton(
+                                                  icon: Icon(
+                                                      Icons.add_comment_outlined),
+                                                  onPressed: () {
+                                                    currentavis = null;
+                                                        
+                                                        ratingComment.text =
+                                                          null;
+                                                        ratingController =
+                                                            null;
+                                                    avisEditing = false;
+                                                    Navigator.of(context)
+                                                        .pushReplacementNamed(
+                                                            "newavis")
+                                                        .then((value) =>
+                                                            setState(() {}));
+                                                  },
+                                                )
+                                              ])),
+                                        )
+                                      : Row(children: [
+                                          Expanded(
+                                              child: Text(
+                                                  facebookUserLogin.fullName)),
+                                          VerticalDivider(),
+                                          isDone == false
+                                              ? IconButton(
+                                                  icon: Icon(
+                                                      Icons.add_comment_outlined),
+                                                  onPressed: () {
+                                                    currentavis = null;
+                                                        
+                                                        ratingComment.text =
+                                                          null;
+                                                        ratingController =
+                                                            null;
+                                                    avisEditing = false;
+                                                    Navigator.of(context)
+                                                        .pushReplacementNamed(
+                                                            "newavis")
+                                                        .then((value) =>
+                                                            setState(() {}));
+                                                  },
+                                                )
+                                              : Container()
+                                        ]),
+                                  children: [
+                                    SizedBox(
+                                      height: MediaQuery.of(context).size.height,
+                                      child: ListView.builder(
+                                          itemCount: P.avis.length,
+                                          itemBuilder: (_, ii) {
+                                            var _avis = P.avis[ii];
+                                            print(_avis.user.fullName);
+
+                                            if (facebookUserLogin.id != null) {
+                                              if (_avis.user.id ==
+                                                  facebookUserLogin.id) {
+                                                return Column(children: [
+                                                  ListTile(
+                                                    title: Text(_avis
+                                                                .user.fullName ==
+                                                            null
+                                                        ? "null"
+                                                        : _avis.user.fullName),
+                                                    trailing: IconButton(
+                                                        onPressed: (){
+                                                           currentavis = _avis;
+                                                          avisEditing = true;
+                                                          ratingComment.text =
+                                                            _avis.comment;
+                                                        ratingController =
+                                                            _avis.rate;
+                                                        Navigator.of(context)
+                                                            .pushReplacementNamed(
+                                                                "newavis")
+                                                            .then((value) =>
+                                                                setState(
+                                                                    () {}));},
+                                                        icon: Icon(Icons.edit)),
+                                                    subtitle: Text(_avis.comment),
+                                                    leading: Wrap(children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                                3),
+                                                        child: Icon(Icons.star,
+                                                            size: 15),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets.all(
+                                                                3),
+                                                        child: Text(_avis.rate.toString()),
+                                                      )
+                                                    ]),
+                                                  ),
+                                                  Divider(height: 20)
+                                                ]);
+                                              }
+                                            }
+
+                                            return Column(children: [
+                                              ListTile(
+                                                title: Text(
+                                                    _avis.user.fullName == null
+                                                        ? "Null"
+                                                        : _avis.user.fullName),
+                                                subtitle: Text(_avis.comment),
+                                                leading: Wrap(children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(3),
+                                                    child: Icon(Icons.star,
+                                                        size: 15),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(3),
+                                                    child: Text(
+                                                        _avis.rate.toString()),
+                                                  )
+                                                ]),
+                                              ),
+                                              Divider(height: 20)
+                                            ]);
+                                          }),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                           
+                                         
+                                         
                                             ]);
                                           }),
                                     );

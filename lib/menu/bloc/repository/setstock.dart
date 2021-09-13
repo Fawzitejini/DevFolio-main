@@ -3,13 +3,11 @@ import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
 
 import '../../../../public_data.dart';
 
-
-
 class SetData {
   static Map stockToMap(FStock stock, FCategories categories) {
     return {
       "datepublier": DateTime.now().toString(),
-      "productId":"Cat"+ randomNumber(100, 999).toString(),
+      "productId": "Cat" + randomNumber(100, 999).toString(),
       "name": stock.productName,
       "categorie": FCategories.productCategoriesTomMap(categories),
       "photo": stock.productImage,
@@ -20,12 +18,34 @@ class SetData {
     };
   }
 
- static Future<void> setNewitems(FStock stock, FCategories categories) async {
-   FirebaseDatabaseWeb.instance
+  static Future<void> setNewitems(FStock stock, FCategories categories) async {
+    FirebaseDatabaseWeb.instance
         .reference()
-        .child("items").child(getRandString(10))
+        .child("items")
+        .child(getRandString(10))
         .set(stockToMap(stock, categories));
     print("object saved");
+  }
+
+  static Future<void> setNewAvis(FStock st, FAvis avis) async {
+    FirebaseDatabaseWeb.instance
+        .reference()
+        .child("items")
+        .child(st.key)
+        .child("avis")
+        .child(getRandString(10))
+        .set(FAvis.avisToDatabase(avis));
+  }
+
+  static Future<void> editAvis(FStock st, FAvis avis) async {
+    print(avis.key);
+    FirebaseDatabaseWeb.instance
+        .reference()
+        .child("items")
+        .child(st.key)
+        .child("avis")
+        .child(avis.key)
+        .set(FAvis.avisToDatabase(avis));
   }
 }
 

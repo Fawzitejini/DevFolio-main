@@ -20,4 +20,9 @@ class DataConverter {
 
     return oCcy.format(number);
   }
+
+  static String numberConvert(double number) {
+    var f = NumberFormat("###.0#", "en_US");
+    return f.format(number);
+  }
 }

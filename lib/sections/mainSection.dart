@@ -34,9 +34,8 @@ class _MainPageState extends State<MainPage> {
     "Nouveauté",
     "Nos promotion",
     "Services",
-    "Contact",
-    "Abonnez-vous",
     "Contactez nous",
+
   ];
 
   final List<IconData> _sectionsIcons = [
@@ -45,9 +44,8 @@ class _MainPageState extends State<MainPage> {
     Icons.new_releases,
     Icons.point_of_sale_sharp,
     Icons.settings_applications,
-    Icons.phone,
-    Icons.subscriptions,
-    Icons.contact_page
+    Icons.contact_page,
+    
   ];
 
   void _scroll(int i) {
@@ -66,18 +64,16 @@ class _MainPageState extends State<MainPage> {
     } else if (i == 4) {
       return GalleryBloc();
     } else if (i == 5) {
-      return Subscribe();
-    } else if (i == 6) {
       return Contact();
-    } else if (i == 7) {
+    } else if (i == 6) {
       return SizedBox(
         height: 40.0,
       );
-    } else if (i == 8) {
+    } else if (i == 7) {
       return ArrowOnTop(
         onPressed: () => _scroll(0),
       );
-    } else if (i == 9) {
+    } else if (i == 8) {
       return Footer();
     } else {
       return Container();
@@ -212,7 +208,8 @@ class _MainPageState extends State<MainPage> {
               _appBarActions(_sectionsName[i], i, _sectionsIcons[i]),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: MaterialButton(
+              child:
+               MaterialButton(
                 hoverColor: kPrimaryColor.withAlpha(150),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0),
@@ -227,6 +224,31 @@ class _MainPageState extends State<MainPage> {
                   ),
                   title: Text(
                     "Notre menu",
+                    style: GoogleFonts.montserrat(
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+             Padding(
+              padding: const EdgeInsets.all(8.0),
+              child:
+               MaterialButton(
+                hoverColor: kPrimaryColor.withAlpha(150),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    side: BorderSide(color: kPrimaryColor)),
+                onPressed: () {
+                  Navigator.of(context).pushNamed("adminpanel");
+                },
+                child: ListTile(
+                  leading: Icon(
+                    Icons.admin_panel_settings,
+                    color: Colors.red,
+                  ),
+                  title: Text(
+                    "Admin panel",
                     style: GoogleFonts.montserrat(
                       fontWeight: FontWeight.w200,
                     ),

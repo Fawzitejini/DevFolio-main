@@ -457,7 +457,7 @@ class _CategorieState extends State<Categorie> {
                                                   icon: Icon(
                                                       Icons.add_comment_outlined),
                                                   onPressed: () {
-                                                    currentavis = null;
+                                                    currentavis = FAvis();
                                                         
                                                         ratingComment.text =
                                                           null;
@@ -483,7 +483,7 @@ class _CategorieState extends State<Categorie> {
                                                   icon: Icon(
                                                       Icons.add_comment_outlined),
                                                   onPressed: () {
-                                                    currentavis = null;
+                                                   currentavis = FAvis();
                                                         
                                                         ratingComment.text =
                                                           null;

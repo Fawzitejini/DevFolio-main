@@ -446,7 +446,7 @@ class _HomePageState extends State<HomePage> {
                                                 icon: Icon(
                                                     Icons.add_comment_outlined),
                                                 onPressed: () {
-                                                    currentavis = null;
+                                                    currentavis = FAvis();
                                                         
                                                         ratingComment.text =
                                                           null;
@@ -472,7 +472,7 @@ class _HomePageState extends State<HomePage> {
                                                 icon: Icon(
                                                     Icons.add_comment_outlined),
                                                 onPressed: () {
-                                                  currentavis = null;
+                                                currentavis = FAvis();
                                                         
                                                         ratingComment.text =
                                                           null;

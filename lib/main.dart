@@ -3,9 +3,12 @@ import 'package:folio/constants.dart';
 import 'package:folio/menu/constants/own_colors.dart';
 import 'package:folio/menu/ui_states/avis/avis.dart';
 import 'package:folio/sections/mainSection.dart';
+import 'package:folio/widget/privacy.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slimy_card/slimy_card.dart';
 import 'package:splashscreen/splashscreen.dart';
+import 'package:url_strategy/url_strategy.dart';
+import 'admin/main_admin.dart';
 import 'menu/bloc/repository/firebase_stock_model.dart';
 import 'menu/ui_states/master_pages/main_page.dart';
 import 'dart:async';
@@ -39,8 +42,9 @@ class Testfirebase {
 }
 
 Future<void> main() async {
-  // setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
+  // setPathUrlStrategy();
+  
 
   runApp(MyApp());
 }
@@ -55,6 +59,8 @@ class MyApp extends StatelessWidget {
           "index": (context) => Splash(),
           "newavis": (context) => CustomerAvis(),
           "ourmenu": (context) => MenuSplash(),
+          "privacy":(_)=>PdfLoader(),
+          "adminpanel":(_)=>AdminPanel()
         },
         debugShowCheckedModeBanner: false,
         title: 'ESSALAM',

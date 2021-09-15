@@ -14,8 +14,9 @@ class FacebookUserLogin {
   String lastName;
   String email;
   String picture;
+  String password;
   FacebookUserLogin(
-      {this.id, this.fullName, this.firstName, this.lastName, this.email});
+      {this.id, this.fullName, this.firstName, this.lastName, this.email,this.password});
 
   factory FacebookUserLogin.fromJson(Map<String, dynamic> json) =>
       FacebookUserLogin(

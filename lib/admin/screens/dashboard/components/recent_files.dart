@@ -1,8 +1,11 @@
-
 import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:folio/admin/models/RecentFile.dart';
+import 'package:folio/menu/bloc/repository/firebase_stock_model.dart';
+import 'package:folio/menu/constants/data_converter.dart';
+import 'package:folio/public_data.dart';
 
 import '../../../constants.dart';
 
@@ -23,7 +26,7 @@ class RecentFiles extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Recent Files",
+            "Les element actuel",
             style: Theme.of(context).textTheme.subtitle1,
           ),
           SizedBox(
@@ -33,19 +36,23 @@ class RecentFiles extends StatelessWidget {
               minWidth: 600,
               columns: [
                 DataColumn(
-                  label: Text("File Name"),
+                  label: Text("Image"),
                 ),
                 DataColumn(
-                  label: Text("Date"),
+                  label: Text("Element"),
                 ),
                 DataColumn(
-                  label: Text("Size"),
+                  label: Text("PU"),
                 ),
+                DataColumn(
+                  label: Text("Pu promo"),
+                ),
+                DataColumn(label: Text("En promo")),
+                DataColumn(label: Text("Modifier")),
               ],
-              rows: List.generate(
-                demoRecentFiles.length,
-                (index) => recentFileDataRow(demoRecentFiles[index]),
-              ),
+              rows: List.generate(globalListOfStock.length, (index) {
+                return recentFileDataRow(globalListOfStock[index]);
+              }),
             ),
           ),
         ],
@@ -54,26 +61,39 @@ class RecentFiles extends StatelessWidget {
   }
 }
 
-DataRow recentFileDataRow(RecentFile fileInfo) {
+DataRow recentFileDataRow(FStock item) {
+  bool _isSale = item.isSales;
   return DataRow(
     cells: [
       DataCell(
-        Row(
-          children: [
-            SvgPicture.asset(
-              fileInfo.icon,
-              height: 30,
-              width: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(fileInfo.title),
-            ),
-          ],
+        Image.memory(
+          DataConverter.image(item.productImage),
+          height: 30,
+          width: 30,
         ),
       ),
-      DataCell(Text(fileInfo.date)),
-      DataCell(Text(fileInfo.size)),
+      DataCell(Flexible(
+          child: Text(
+        item.productName,
+        style: TextStyle(fontSize: 12),
+      ))),
+      DataCell(Text(DataConverter.currencyConvert(item.productUnitPrice))),
+      DataCell(Text(DataConverter.currencyConvert(item.productSalesPrice))),
+      DataCell(FlutterSwitch(
+         
+            value: _isSale,
+           
+            padding: 8.0,
+            showOnOff: true,
+            onToggle: (val) {
+             _isSale = val;
+            },
+      )),
+      DataCell(IconButton(
+          onPressed: () {
+            print(item.productName);
+          },
+          icon: Icon(Icons.edit))),
     ],
   );
 }

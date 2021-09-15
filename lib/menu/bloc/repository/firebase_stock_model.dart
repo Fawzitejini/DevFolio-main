@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase/firebase.dart' as app;
 import 'package:firebase_db_web_unofficial/firebasedbwebunofficial.dart';
+import 'package:folio/admin/models/RecentFile.dart';
 import 'package:folio/public_data.dart';
 import 'package:folio/users/facebook_users.dart';
 
@@ -161,7 +162,7 @@ Future<List<FStock>> getItems() async {
       productSalesPrice: item.value["saleprice"],
       isSales: _isSales,
     );
-
+   
     _fstock.avis = await CurrentItemAvis.listOfAvis(_fstock);
     _stock.add(_fstock);
   }
@@ -209,7 +210,6 @@ class CurrentItemAvis {
       }
 
       for (var item in _data.entries) {
-       
         //   print(item.value["Comment"] + '\n' + item.value['Rate'] );
         _avis.add(FAvis(
             key: item.key,

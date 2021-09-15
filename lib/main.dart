@@ -7,7 +7,8 @@ import 'package:folio/widget/privacy.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slimy_card/slimy_card.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:url_strategy/url_strategy.dart';
+import 'admin/login/login_page.dart';
+import 'admin/login/widgets/login_form.dart';
 import 'admin/main_admin.dart';
 import 'menu/bloc/repository/firebase_stock_model.dart';
 import 'menu/ui_states/master_pages/main_page.dart';
@@ -15,8 +16,6 @@ import 'dart:async';
 
 import 'sections/additem/addcategorie.dart';
 import 'sections/additem/additem.dart';
-import 'users/facebook_users.dart';
-import 'users/google_users.dart';
 
 //import 'package:url_strategy/url_strategy.dart';
 class Testfirebase {
@@ -60,7 +59,7 @@ class MyApp extends StatelessWidget {
           "newavis": (context) => CustomerAvis(),
           "ourmenu": (context) => MenuSplash(),
           "privacy":(_)=>PdfLoader(),
-          "adminpanel":(_)=>AdminPanel()
+          "adminpanel":(_)=>AdminPanel(),'login': (context) => LoginScreen()
         },
         debugShowCheckedModeBanner: false,
         title: 'ESSALAM',

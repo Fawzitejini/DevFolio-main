@@ -65,6 +65,7 @@ dependencies:
   fl_chart: ^0.36.1
   provider: ^5.0.0
   data_table_2: ^2.0.3
+  flutter_login: ^2.2.1
   
 
   flutter_custom_clippers: ^2.0.0

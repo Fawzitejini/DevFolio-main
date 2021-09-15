@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:folio/animations/entranceFader.dart';
 import 'package:folio/constants.dart';
+import 'package:folio/public_data.dart';
 import 'package:folio/sections/about/about.dart';
 import 'package:folio/sections/contact/contact.dart';
 import 'package:folio/sections/home/home.dart';
@@ -240,7 +241,9 @@ class _MainPageState extends State<MainPage> {
                     borderRadius: BorderRadius.circular(5.0),
                     side: BorderSide(color: kPrimaryColor)),
                 onPressed: () {
-                  Navigator.of(context).pushNamed("adminpanel");
+
+        adminConnected == true?          Navigator.of(context).pushNamed("adminpanel")
+        :Navigator.of(context).pushNamed("login") ;
                 },
                 child: ListTile(
                   leading: Icon(

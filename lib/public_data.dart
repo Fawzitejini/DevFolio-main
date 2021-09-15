@@ -45,3 +45,4 @@ bool isNumeric(String s) {
 }
 
 bool avisEditing = false;
+bool adminConnected = false;
